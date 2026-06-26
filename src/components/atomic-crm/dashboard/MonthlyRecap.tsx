@@ -20,9 +20,7 @@ const currentYearMonth = (): string => {
 };
 
 /** Converts a "YYYY-MM" string to the first/last ISO date of that month. */
-const monthBounds = (
-  yearMonth: string,
-): { start: string; end: string } => {
+const monthBounds = (yearMonth: string): { start: string; end: string } => {
   const [year, month] = yearMonth.split("-").map(Number);
   const start = new Date(year, month - 1, 1);
   const end = new Date(year, month, 0); // last day of the month
@@ -42,9 +40,7 @@ const monthBounds = (
  */
 export const MonthlyRecap = () => {
   const translate = useTranslate();
-  const [selectedMonth, setSelectedMonth] = useState<string>(
-    currentYearMonth,
-  );
+  const [selectedMonth, setSelectedMonth] = useState<string>(currentYearMonth);
 
   const { start, end } = monthBounds(selectedMonth);
 
@@ -121,7 +117,10 @@ export const MonthlyRecap = () => {
             {translate("crm.common.loading", { _: "Loading..." })}
           </p>
         ) : !total ? (
-          <p className="p-4 text-sm text-muted-foreground" data-testid="monthly-recap-empty">
+          <p
+            className="p-4 text-sm text-muted-foreground"
+            data-testid="monthly-recap-empty"
+          >
             {translate("crm.dashboard.monthly_recap.empty", {
               _: "No attendance data for this month.",
             })}
