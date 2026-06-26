@@ -26,9 +26,9 @@ export const generateSubscriptions = (db: Db, size = 100): Subscription[] =>
       purchased_at,
       price: datatype.boolean()
         ? parseFloat(
-            (
-              total_sessions * random.arrayElement(PRICE_PER_SESSION)
-            ).toFixed(2),
+            (total_sessions * random.arrayElement(PRICE_PER_SESSION)).toFixed(
+              2,
+            ),
           )
         : null,
       notes: datatype.boolean() ? "No notes" : null,

@@ -29,7 +29,11 @@ const SubscriptionShowContent = () => {
               {translate("resources.subscriptions.fields.contact_id")}
             </dt>
             <dd>
-              <ReferenceField source="contact_id" reference="contacts" link="show" />
+              <ReferenceField
+                source="contact_id"
+                reference="contacts"
+                link="show"
+              />
             </dd>
 
             <dt className="text-sm font-medium text-muted-foreground">

@@ -21,11 +21,7 @@ export const SubscriptionInputs = () => (
       validate={required()}
       helperText={false}
     />
-    <DateInput
-      source="purchased_at"
-      validate={required()}
-      helperText={false}
-    />
+    <DateInput source="purchased_at" validate={required()} helperText={false} />
     <NumberInput source="price" min={0} helperText={false} />
     <TextInput source="notes" multiline helperText={false} />
   </div>
