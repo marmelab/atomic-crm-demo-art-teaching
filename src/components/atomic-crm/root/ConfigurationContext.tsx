@@ -1,19 +1,18 @@
 import { useMemo } from "react";
 import { useStore } from "ra-core";
 
-import type { DealStage, LabeledValue, NoteStatus } from "../types";
+import type { LabeledValue, NoteStatus } from "../types";
 import { defaultConfiguration } from "./defaultConfiguration";
 
 export const CONFIGURATION_STORE_KEY = "app.configuration";
 
 export interface ConfigurationContextValue {
-  companySectors: LabeledValue[];
-  currency: string;
-  dealCategories: LabeledValue[];
-  dealPipelineStatuses: string[];
-  dealStages: DealStage[];
   noteStatuses: NoteStatus[];
   taskTypes: LabeledValue[];
+  /** Booking type options (how the student obtained their spot). */
+  bookingTypes: LabeledValue[];
+  /** Booking status options (lifecycle state of a booking). */
+  bookingStatuses: LabeledValue[];
   title: string;
   darkModeLogo: string;
   lightModeLogo: string;

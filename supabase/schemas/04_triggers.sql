@@ -4,10 +4,6 @@
 --
 
 -- Auto-populate sales_id from current auth user on insert
-create or replace trigger set_company_sales_id_trigger
-    before insert on public.companies
-    for each row execute function public.set_sales_id_default();
-
 create or replace trigger set_contact_sales_id_trigger
     before insert on public.contacts
     for each row execute function public.set_sales_id_default();
@@ -16,22 +12,26 @@ create or replace trigger set_contact_notes_sales_id_trigger
     before insert on public.contact_notes
     for each row execute function public.set_sales_id_default();
 
-create or replace trigger set_deal_sales_id_trigger
-    before insert on public.deals
-    for each row execute function public.set_sales_id_default();
-
-create or replace trigger set_deal_notes_sales_id_trigger
-    before insert on public.deal_notes
-    for each row execute function public.set_sales_id_default();
-
 create or replace trigger set_task_sales_id_trigger
     before insert on public.tasks
     for each row execute function public.set_sales_id_default();
 
--- Auto-fetch company logo from website favicon on save
-create or replace trigger company_saved
-    before insert or update on public.companies
-    for each row execute function public.handle_company_saved();
+create or replace trigger set_subscription_sales_id_trigger
+    before insert on public.subscriptions
+    for each row execute function public.set_sales_id_default();
+
+create or replace trigger set_session_sales_id_trigger
+    before insert on public.sessions
+    for each row execute function public.set_sales_id_default();
+
+create or replace trigger set_booking_sales_id_trigger
+    before insert on public.bookings
+    for each row execute function public.set_sales_id_default();
+
+-- Enforce per-session booking capacity before each booking insert or update
+create or replace trigger check_session_capacity_trigger
+    before insert or update on public.bookings
+    for each row execute function public.check_session_capacity();
 
 -- Lowercase contact emails before insert or update (must run before contact_saved)
 create or replace trigger "10_lowercase_contact_emails"
@@ -57,17 +57,6 @@ create or replace trigger on_contact_notes_attachments_updated_delete_note_attac
 
 create or replace trigger on_contact_notes_deleted_delete_note_attachments
     after delete on public.contact_notes
-    for each row execute function public.cleanup_note_attachments();
-
--- Cleanup storage attachments when deal notes are updated or deleted
-create or replace trigger on_deal_notes_attachments_updated_delete_note_attachments
-    after update on public.deal_notes
-    for each row
-    when (old.attachments is distinct from new.attachments)
-    execute function public.cleanup_note_attachments();
-
-create or replace trigger on_deal_notes_deleted_delete_note_attachments
-    after delete on public.deal_notes
     for each row execute function public.cleanup_note_attachments();
 
 -- Auth triggers: sync auth.users to public.sales

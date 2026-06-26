@@ -1,7 +1,7 @@
 import { expect, test } from "./fixtures";
 
 test.describe("user adding a task", () => {
-  test.beforeEach(async ({ createSales, createContact, createCompany }) => {
+  test.beforeEach(async ({ createSales, createContact }) => {
     const sales = await createSales({
       first_name: "John",
       last_name: "Doe",
@@ -9,17 +9,11 @@ test.describe("user adding a task", () => {
       password: "password",
     });
 
-    const company = await createCompany({
-      name: "Smith Corp",
-      salesId: sales.id,
-    });
-
     await createContact({
       first_name: "Jane",
       last_name: "Smith",
       title: "CEO",
       sales_id: sales.id,
-      company_id: company.id,
       notes: [{ text: "Met at a conference." }],
     });
 
@@ -28,7 +22,6 @@ test.describe("user adding a task", () => {
       last_name: "Johnson",
       title: "CTO",
       sales_id: sales.id,
-      company_id: company.id,
     });
 
     await createContact({
@@ -36,7 +29,6 @@ test.describe("user adding a task", () => {
       last_name: "Williams",
       title: "CFO",
       sales_id: sales.id,
-      company_id: company.id,
     });
   });
   test("user adding a task", async ({ page, isMobile, menu, dismissToast }) => {
@@ -48,7 +40,7 @@ test.describe("user adding a task", () => {
     await expect(page).toHaveTitle(/Atomic CRM/);
     await expect(page.getByText("Latest Activity")).toBeVisible();
 
-    await menu.goToContacts();
+    await menu.goToStudents();
     await page.waitForLoadState("networkidle");
 
     await page.getByText("Jane Smith").click();

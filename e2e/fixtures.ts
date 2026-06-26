@@ -9,12 +9,12 @@ const adminSupabase = createClient(
 
 // Tables in FK-safe deletion order (children before parents)
 const TABLES = [
+  "bookings",
+  "sessions",
+  "subscriptions",
   "tasks",
   "contact_notes",
-  "deal_notes",
-  "deals",
   "contacts",
-  "companies",
   "tags",
   "favicons_excluded_domains",
   "configuration",
@@ -120,38 +120,16 @@ async function createNotes({
   }
 }
 
-async function createCompany({
-  name,
-  salesId,
-}: {
-  name: string;
-  salesId: string | number;
-}) {
-  const { data, error } = await adminSupabase
-    .from("companies")
-    .insert({ name, sales_id: salesId })
-    .select("id")
-    .single();
-
-  if (error) {
-    throw new Error(`Failed to create company: ${error.message}`);
-  }
-
-  return data;
-}
-
 async function createContact({
   first_name,
   last_name,
   title = "",
-  company_id = null,
   sales_id,
   notes = [],
 }: {
   first_name: string;
   last_name: string;
   title?: string;
-  company_id?: string | number | null;
   sales_id: string | number;
   notes?: {
     text: string;
@@ -165,7 +143,6 @@ async function createContact({
       first_name,
       last_name,
       title,
-      company_id,
       sales_id,
       first_seen: new Date().toISOString(),
       last_seen: new Date().toISOString(),
@@ -193,13 +170,91 @@ async function createContact({
   return data;
 }
 
+async function createSession({
+  starts_at,
+  duration_minutes = 60,
+  capacity = 15,
+  overbooking = 2,
+  sales_id,
+}: {
+  starts_at: string;
+  duration_minutes?: number;
+  capacity?: number;
+  overbooking?: number;
+  sales_id: string | number;
+}) {
+  const { data, error } = await adminSupabase
+    .from("sessions")
+    .insert({ starts_at, duration_minutes, capacity, overbooking, sales_id })
+    .select("id")
+    .single();
+
+  if (error) {
+    throw new Error(`Failed to create session: ${error.message}`);
+  }
+
+  return data;
+}
+
+async function createSubscription({
+  contact_id,
+  total_sessions,
+  purchased_at,
+  sales_id,
+}: {
+  contact_id: string | number;
+  total_sessions: number;
+  purchased_at: string;
+  sales_id: string | number;
+}) {
+  const { data, error } = await adminSupabase
+    .from("subscriptions")
+    .insert({ contact_id, total_sessions, purchased_at, sales_id })
+    .select("id")
+    .single();
+
+  if (error) {
+    throw new Error(`Failed to create subscription: ${error.message}`);
+  }
+
+  return data;
+}
+
+async function createBooking({
+  session_id,
+  contact_id,
+  subscription_id = null,
+  type = "single",
+  status = "booked",
+  sales_id,
+}: {
+  session_id: string | number;
+  contact_id: string | number;
+  subscription_id?: string | number | null;
+  type?: "single" | "subscription" | "discovery";
+  status?: "booked" | "attended" | "no_show" | "cancelled";
+  sales_id: string | number;
+}) {
+  const { data, error } = await adminSupabase
+    .from("bookings")
+    .insert({ session_id, contact_id, subscription_id, type, status, sales_id })
+    .select("id")
+    .single();
+
+  if (error) {
+    throw new Error(`Failed to create booking: ${error.message}`);
+  }
+
+  return data;
+}
+
 const getMenuMethod = ({ page }: { page: Page; isMobile: boolean }) => ({
   goToDashboard: async () => {
     await page.getByRole("link", { name: "Dashboard" }).click();
     await page.waitForLoadState("networkidle");
   },
-  goToContacts: async () => {
-    await page.getByRole("link", { name: "Contacts" }).click();
+  goToStudents: async () => {
+    await page.getByRole("link", { name: "Students" }).click();
     await page.waitForLoadState("networkidle");
   },
 });
@@ -215,9 +270,11 @@ export const test = base.extend<{
   resetDb: void;
   createUser: typeof createUser;
   createSales: typeof createSales;
-  createCompany: typeof createCompany;
   createContact: typeof createContact;
   createNotes: typeof createNotes;
+  createSession: typeof createSession;
+  createSubscription: typeof createSubscription;
+  createBooking: typeof createBooking;
   menu: ReturnType<typeof getMenuMethod>;
   dismissToast: (content: string) => Promise<void>;
 }>({
@@ -240,16 +297,24 @@ export const test = base.extend<{
     await cb(createSales);
   },
   // eslint-disable-next-line no-empty-pattern
-  createCompany: async ({}, cb) => {
-    await cb(createCompany);
-  },
-  // eslint-disable-next-line no-empty-pattern
   createContact: async ({}, cb) => {
     await cb(createContact);
   },
   // eslint-disable-next-line no-empty-pattern
   createNotes: async ({}, cb) => {
     await cb(createNotes);
+  },
+  // eslint-disable-next-line no-empty-pattern
+  createSession: async ({}, cb) => {
+    await cb(createSession);
+  },
+  // eslint-disable-next-line no-empty-pattern
+  createSubscription: async ({}, cb) => {
+    await cb(createSubscription);
+  },
+  // eslint-disable-next-line no-empty-pattern
+  createBooking: async ({}, cb) => {
+    await cb(createBooking);
   },
   menu: async ({ page, isMobile }, cb) => {
     await cb(getMenuMethod({ page, isMobile }));

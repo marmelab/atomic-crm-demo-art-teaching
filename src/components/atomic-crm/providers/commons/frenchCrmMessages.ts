@@ -2,84 +2,19 @@ import type { CrmMessages } from "./englishCrmMessages";
 
 export const frenchCrmMessages = {
   resources: {
-    companies: {
-      name: "Entreprise |||| Entreprises",
-      forcedCaseName: "Entreprise",
-      fields: {
-        name: "Nom de l'entreprise",
-        website: "Site web",
-        linkedin_url: "LinkedIn",
-        phone_number: "Numéro de téléphone",
-        created_at: "Date de création",
-        nb_contacts: "Nombre de contacts",
-        revenue: "Chiffre d'affaires",
-        sector: "Secteur",
-        size: "Taille",
-        tax_identifier: "Identifiant fiscal",
-        address: "Adresse",
-        city: "Ville",
-        zipcode: "Code postal",
-        state_abbr: "État",
-        country: "Pays",
-        description: "Description",
-        context_links: "URLs de contexte",
-        sales_id: "Responsable de compte",
-      },
-      empty: {
-        description: "Il semble que la liste de vos entreprises soit vide.",
-        title: "Aucune entreprise trouvée",
-      },
-      field_categories: {
-        contact: "Contact",
-        additional_info: "Informations supplémentaires",
-        address: "Adresse",
-        context: "Contexte",
-      },
-      action: {
-        create: "Créer une entreprise",
-        edit: "Modifier l'entreprise",
-        new: "Nouvelle entreprise",
-        show: "Afficher l'entreprise",
-      },
-      added_on: "Ajoutée le %{date}",
-      followed_by: "Suivie par %{name}",
-      followed_by_you: "Suivie par vous",
-      no_contacts: "Aucun contact",
-      nb_contacts: "%{smart_count} contact |||| %{smart_count} contacts",
-      nb_deals: "%{smart_count} affaire |||| %{smart_count} affaires",
-      sizes: {
-        one_employee: "1 employé",
-        two_to_nine_employees: "2-9 employés",
-        ten_to_forty_nine_employees: "10-49 employés",
-        fifty_to_two_hundred_forty_nine_employees: "50-249 employés",
-        two_hundred_fifty_or_more_employees: "250 employés ou plus",
-      },
-      autocomplete: {
-        create_error:
-          "Une erreur s'est produite lors de la création de l'entreprise",
-        create_item: "Créer %{item}",
-        create_label: "Commencez à taper pour créer une nouvelle entreprise",
-      },
-      filters: {
-        only_mine: "Seulement les entreprises que je gère",
-      },
-    },
     contacts: {
-      name: "Contact |||| Contacts",
-      forcedCaseName: "Contact",
+      name: "Élève |||| Élèves",
+      forcedCaseName: "Élève",
       field_categories: {
         background_info: "Informations complémentaires",
         identity: "Identité",
         misc: "Divers",
         personal_info: "Informations personnelles",
-        position: "Poste",
       },
       fields: {
         first_name: "Prénom",
         last_name: "Nom",
         last_seen: "Dernière activité",
-        title: "Titre",
-        company_id: "Entreprise",
         email_jsonb: "Adresses e-mail",
         email: "E-mail",
         phone_jsonb: "Numéros de téléphone",
@@ -90,13 +25,13 @@ export const frenchCrmMessages = {
         sales_id: "Responsable de compte",
       },
       action: {
-        add: "Ajouter un contact",
-        add_first: "Ajoutez votre premier contact",
-        create: "Créer un contact",
-        edit: "Modifier le contact",
+        add: "Ajouter un élève",
+        add_first: "Ajoutez votre premier élève",
+        create: "Créer un élève",
+        edit: "Modifier l'élève",
         export_vcard: "Exporter en vCard",
-        new: "Nouveau contact",
-        show: "Afficher le contact",
+        new: "Nouvel élève",
+        show: "Afficher l'élève",
       },
       background: {
         last_activity_on: "Dernière activité le %{date}",
@@ -105,19 +40,17 @@ export const frenchCrmMessages = {
         followed_by_you: "Suivi par vous",
         status_none: "Aucun",
       },
-      position_at: "%{title} chez",
-      position_at_company: "%{title} chez %{company}",
       empty: {
-        description: "Il semble que votre liste de contacts soit vide.",
-        title: "Aucun contact trouvé",
+        description: "Il semble que votre liste d'élèves soit vide.",
+        title: "Aucun élève trouvé",
       },
       import: {
-        title: "Importer des contacts",
+        title: "Importer des élèves",
         button: "Importer un fichier CSV",
         complete:
-          "Import des contacts terminé. %{importCount} contacts importés, %{errorCount} erreurs",
+          "Import des élèves terminé. %{importCount} élèves importés, %{errorCount} erreurs",
         progress:
-          "%{importCount} / %{rowCount} contacts importés, avec %{errorCount} erreurs.",
+          "%{importCount} / %{rowCount} élèves importés, avec %{errorCount} erreurs.",
         error:
           "Échec de l'importation de ce fichier. Veuillez vous assurer que vous avez fourni un fichier CSV valide.",
         imported: "Importé",
@@ -128,7 +61,7 @@ export const frenchCrmMessages = {
           "Voici un exemple de fichier CSV que vous pouvez utiliser comme modèle",
         stop: "Arrêter l'importation",
         csv_file: "Fichier CSV",
-        contacts_label: "contact |||| contacts",
+        contacts_label: "élève |||| élèves",
       },
       inputs: {
         genders: {
@@ -143,37 +76,37 @@ export const frenchCrmMessages = {
         },
       },
       list: {
-        error_loading: "Erreur lors du chargement des contacts",
+        error_loading: "Erreur lors du chargement des élèves",
       },
       bulk_tag: {
         action: "Étiqueter",
         back: "Retour aux étiquettes",
         create_description:
-          "Créez une nouvelle étiquette et appliquez-la aux contacts sélectionnés.",
+          "Créez une nouvelle étiquette et appliquez-la aux élèves sélectionnés.",
         description:
-          "Choisissez une étiquette existante ou créez-en une pour les contacts sélectionnés.",
+          "Choisissez une étiquette existante ou créez-en une pour les élèves sélectionnés.",
         empty:
-          "Aucune étiquette pour le moment. Créez-en une pour étiqueter les contacts sélectionnés.",
-        error: "Impossible d'ajouter l'étiquette aux contacts",
-        noop: "Les contacts sélectionnés ont déjà cette étiquette",
+          "Aucune étiquette pour le moment. Créez-en une pour étiqueter les élèves sélectionnés.",
+        error: "Impossible d'ajouter l'étiquette aux élèves",
+        noop: "Les élèves sélectionnés ont déjà cette étiquette",
         success:
-          "Étiquette ajoutée à %{smart_count} contact |||| Étiquette ajoutée à %{smart_count} contacts",
-        title: "Ajouter une étiquette aux contacts",
+          "Étiquette ajoutée à %{smart_count} élève |||| Étiquette ajoutée à %{smart_count} élèves",
+        title: "Ajouter une étiquette aux élèves",
       },
       merge: {
-        action: "Fusionner avec un autre contact",
-        confirm: "Fusionner les contacts",
-        current_contact: "Contact actuel (sera supprimé)",
-        description: "Fusionnez ce contact avec un autre.",
-        error: "Échec de la fusion des contacts",
+        action: "Fusionner avec un autre élève",
+        confirm: "Fusionner les élèves",
+        current_contact: "Élève actuel (sera supprimé)",
+        description: "Fusionnez cet élève avec un autre.",
+        error: "Échec de la fusion des élèves",
         merging: "Fusion...",
         no_additional_data: "Aucune donnée supplémentaire à fusionner",
-        select_target: "Veuillez sélectionner un contact avec lequel fusionner",
-        success: "Contacts fusionnés avec succès",
-        target_contact: "Contact cible (sera conservé)",
-        title: "Fusionner les contacts",
+        select_target: "Veuillez sélectionner un élève avec lequel fusionner",
+        success: "Élèves fusionnés avec succès",
+        target_contact: "Élève cible (sera conservé)",
+        title: "Fusionner les élèves",
         warning_description:
-          "Toutes les données seront transférées au deuxième contact. Cette action ne peut pas être annulée.",
+          "Toutes les données seront transférées au deuxième élève. Cette action ne peut pas être annulée.",
         warning_title: "Avertissement : opération destructrice",
         what_will_be_merged: "Ce qui sera fusionné :",
       },
@@ -182,7 +115,7 @@ export const frenchCrmMessages = {
         before_this_month: "Avant ce mois-ci",
         before_this_week: "Avant cette semaine",
         managed_by_me: "Géré par moi",
-        search: "Rechercher nom, entreprise...",
+        search: "Rechercher nom...",
         this_week: "Cette semaine",
         today: "Aujourd'hui",
         tags: "Étiquettes",
@@ -190,54 +123,10 @@ export const frenchCrmMessages = {
       },
       hot: {
         empty_change_status:
-          'Changez le statut d\'un contact en ajoutant une note à ce contact et en cliquant sur "afficher les options".',
-        empty_hint: 'Les contacts avec un statut "chaud" apparaîtront ici.',
-        title: "Contacts chauds",
+          'Changez le statut d\'un élève en ajoutant une note à cet élève et en cliquant sur "afficher les options".',
+        empty_hint: 'Les élèves avec un statut "chaud" apparaîtront ici.',
+        title: "Élèves actifs",
       },
-    },
-    deals: {
-      name: "Affaire |||| Affaires",
-      fields: {
-        name: "Nom",
-        description: "Description",
-        company_id: "Entreprise",
-        contact_ids: "Contacts",
-        category: "Catégorie",
-        amount: "Budget",
-        expected_closing_date: "Date de clôture prévue",
-        stage: "Étape",
-      },
-      action: {
-        back_to_deal: "Retour à l'affaire",
-        create: "Créer une affaire",
-        new: "Nouvelle affaire",
-      },
-      field_categories: {
-        misc: "Divers",
-      },
-      archived: {
-        action: "Archiver",
-        error: "Erreur : affaire non archivée",
-        list_title: "Affaires archivées",
-        success: "Affaire archivée",
-        title: "Affaire archivée",
-        view: "Afficher les affaires archivées",
-      },
-      inputs: {
-        linked_to: "Lié à",
-      },
-      unarchived: {
-        action: "Renvoyer au tableau",
-        error: "Erreur : affaire non désarchivée",
-        success: "Affaire désarchivée",
-      },
-      updated: "Affaire mise à jour",
-      empty: {
-        before_create: "avant de créer une affaire.",
-        description: "Il semble que votre liste d'affaires soit vide.",
-        title: "Aucune affaire trouvée",
-      },
-      invalid_date: "Date invalide",
     },
     notes: {
       name: "Note |||| Notes",
@@ -247,7 +136,6 @@ export const frenchCrmMessages = {
         date: "Date",
         attachments: "Pièces jointes",
         contact_id: "Contact",
-        deal_id: "Affaire",
       },
       action: {
         add: "Ajouter une note",
@@ -371,6 +259,97 @@ export const frenchCrmMessages = {
         name_placeholder: "Saisir le nom de l'étiquette",
       },
     },
+    subscriptions: {
+      name: "Abonnement |||| Abonnements",
+      forcedCaseName: "Abonnement",
+      fields: {
+        contact_id: "Élève",
+        total_sessions: "Séances totales",
+        purchased_at: "Date d'achat",
+        price: "Prix",
+        notes: "Notes",
+        sessions_used: "Séances utilisées",
+        sessions_remaining: "Séances restantes",
+        sales_id: "Responsable de compte",
+        created_at: "Créé le",
+      },
+      action: {
+        new: "Nouvel abonnement",
+        create: "Créer un abonnement",
+        edit: "Modifier l'abonnement",
+      },
+      empty: {
+        title: "Aucun abonnement trouvé",
+        description: "Il semble qu'il n'y ait pas encore d'abonnements.",
+      },
+    },
+    sessions: {
+      name: "Séance |||| Séances",
+      forcedCaseName: "Séance",
+      fields: {
+        starts_at: "Date et heure de début",
+        duration_minutes: "Durée (minutes)",
+        capacity: "Capacité",
+        overbooking: "Surbooking",
+        notes: "Notes",
+        bookings: "Réservations",
+        sales_id: "Responsable de compte",
+        created_at: "Créé le",
+      },
+      action: {
+        new: "Nouvelle séance",
+        create: "Créer une séance",
+        edit: "Modifier la séance",
+      },
+      empty: {
+        title: "Aucune séance trouvée",
+        description: "Il semble qu'il n'y ait pas encore de séances à venir.",
+      },
+      roster: {
+        title: "Liste des participants",
+        placeholder:
+          "La liste des participants apparaîtra ici une fois les réservations ajoutées.",
+      },
+    },
+    bookings: {
+      name: "Réservation |||| Réservations",
+      forcedCaseName: "Réservation",
+      fields: {
+        session_id: "Séance",
+        contact_id: "Élève",
+        subscription_id: "Abonnement",
+        type: "Type de réservation",
+        status: "Statut",
+        cancelled_at: "Annulé le",
+        sales_id: "Responsable de compte",
+        created_at: "Créé le",
+      },
+      type: {
+        subscription: "Abonnement",
+        single: "Séance unique",
+        discovery: "Découverte",
+      },
+      status: {
+        booked: "Réservé",
+        attended: "Présent",
+        cancelled: "Annulé",
+        no_show: "Absent",
+      },
+      action: {
+        add_student: "Ajouter un élève",
+        buy_pack: "Acheter un pack",
+        mark_attended: "Présent",
+        mark_no_show: "Absent",
+        cancel: "Annuler",
+        created: "Réservation créée",
+        pack_created: "Abonnement créé",
+        status_updated: "Réservation mise à jour",
+      },
+      panel: {
+        history: "Historique des réservations",
+        empty: "Aucune réservation pour l'instant",
+      },
+    },
   },
   crm: {
     action: {
@@ -416,23 +395,13 @@ export const frenchCrmMessages = {
       title: "Notes de version",
     },
     activity: {
-      added_company: "%{name} a ajouté l'entreprise",
-      you_added_company: "Vous avez ajouté l'entreprise",
       added_contact: "%{name} a ajouté le contact",
       you_added_contact: "Vous avez ajouté le contact",
       added_note: "%{name} a ajouté une note sur",
       you_added_note: "Vous avez ajouté une note sur",
-      added_note_about_deal: "%{name} a ajouté une note sur l'affaire",
-      you_added_note_about_deal: "Vous avez ajouté une note sur l'affaire",
-      added_deal: "%{name} a ajouté l'affaire",
-      you_added_deal: "Vous avez ajouté l'affaire",
-      at_company: "chez",
-      to: "à",
       load_more: "Charger plus d'activité",
     },
     dashboard: {
-      deals_chart: "Revenus des affaires à venir",
-      deals_pipeline: "Pipeline des affaires",
       latest_activity: "Dernière activité",
       latest_activity_error:
         "Erreur lors du chargement de la dernière activité",
@@ -444,6 +413,14 @@ export const frenchCrmMessages = {
         whats_next: "Et ensuite ?",
       },
       upcoming_tasks: "Tâches à venir",
+      monthly_recap: {
+        title: "Récapitulatif mensuel",
+        column_student: "Élève",
+        column_sessions_attended: "Séances assistées",
+        column_prepaid_remaining: "Séances prépayées restantes",
+        month_picker_label: "Mois",
+        empty: "Aucune donnée de présence pour ce mois.",
+      },
     },
     header: {
       import_data: "Importer des données",
@@ -467,7 +444,7 @@ export const frenchCrmMessages = {
       },
       idle: {
         description_1:
-          "Vous pouvez importer des ventes, des entreprises, des contacts, des entreprises, des notes et des tâches.",
+          "Vous pouvez importer des ventes, des contacts, des notes et des tâches.",
         description_2:
           "Les données doivent se trouver dans un fichier JSON correspondant à l'exemple suivant :",
       },
@@ -484,18 +461,7 @@ export const frenchCrmMessages = {
     },
     settings: {
       about: "À propos",
-      companies: {
-        sectors: "Secteurs",
-      },
       dark_mode_logo: "Logo du mode sombre",
-      deals: {
-        categories: "Catégories",
-        currency: "Devise",
-        pipeline_help:
-          "Sélectionnez les étapes d'affaire à considérer comme des affaires dans le pipeline.",
-        pipeline_statuses: "Statuts des pipelines",
-        stages: "Étapes",
-      },
       light_mode_logo: "Logo du mode clair",
       notes: {
         statuses: "Statuts",
@@ -512,16 +478,6 @@ export const frenchCrmMessages = {
       app_title: "Titre de l'application",
       sections: {
         branding: "Image de marque",
-      },
-      validation: {
-        duplicate: "%{display_name} en double : %{items}",
-        in_use:
-          "Impossible de supprimer %{display_name} encore utilisés par des affaires : %{items}",
-        validating: "Validation\u2026",
-        entities: {
-          categories: "catégories",
-          stages: "étapes",
-        },
       },
     },
     theme: {

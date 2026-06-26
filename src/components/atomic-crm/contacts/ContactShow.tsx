@@ -3,13 +3,12 @@ import {
   InfiniteListBase,
   RecordRepresentation,
   ShowBase,
+  useGetList,
   useShowContext,
   useTranslate,
 } from "ra-core";
 import type { ShowBaseProps } from "ra-core";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { ReferenceField } from "@/components/admin/reference-field";
-import { TextField } from "@/components/admin/text-field";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -19,7 +18,6 @@ import { Link } from "react-router";
 
 import MobileHeader from "../layout/MobileHeader";
 import { MobileContent } from "../layout/MobileContent";
-import { CompanyAvatar } from "../companies/CompanyAvatar";
 import { NoteCreate, NotesIterator, NotesIteratorMobile } from "../notes";
 import { NoteCreateSheet } from "../notes/NoteCreateSheet";
 import { TagsListEdit } from "./TagsListEdit";
@@ -28,10 +26,13 @@ import { ContactStatusSelector } from "./ContactInputs";
 import { ContactPersonalInfo } from "./ContactPersonalInfo";
 import { ContactBackgroundInfo } from "./ContactBackgroundInfo";
 import { ContactTasksList } from "./ContactTasksList";
-import type { Contact } from "../types";
+import type { Booking, Contact, SubscriptionSummary } from "../types";
 import { Avatar } from "./Avatar";
 import { ContactAside } from "./ContactAside";
 import { MobileBackButton } from "../misc/MobileBackButton";
+import { BuyPackDialog } from "../bookings/BookingCreate";
+import { SubscriptionListItem } from "./SubscriptionListItem";
+import { BookingHistoryList } from "./BookingHistoryList";
 
 export const ContactShow = (props: ShowBaseProps = {}) => {
   const isMobile = useIsMobile();
@@ -103,38 +104,12 @@ const ContactShowContentMobile = () => {
               <h2 className="text-2xl font-bold">
                 <RecordRepresentation />
               </h2>
-              <div className="text-sm text-muted-foreground">
-                {record.title && record.company_id != null
-                  ? `${translate("resources.contacts.position_at", {
-                      title: record.title,
-                    })} `
-                  : record.title}
-                {record.company_id != null && (
-                  <ReferenceField
-                    source="company_id"
-                    reference="companies"
-                    link="show"
-                  >
-                    <TextField source="name" className="underline" />
-                  </ReferenceField>
-                )}
-              </div>
-            </div>
-            <div>
-              <ReferenceField
-                source="company_id"
-                reference="companies"
-                link="show"
-                className="no-underline"
-              >
-                <CompanyAvatar />
-              </ReferenceField>
             </div>
           </div>
         </div>
 
         <Tabs defaultValue="notes" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 h-10">
+          <TabsList className="grid w-full grid-cols-4 h-10">
             <TabsTrigger value="notes">
               {translate("resources.notes.name", { smart_count: 2 })}
             </TabsTrigger>
@@ -142,6 +117,9 @@ const ContactShowContentMobile = () => {
               {translate("crm.common.task_count", {
                 smart_count: taskCount ?? 0,
               })}
+            </TabsTrigger>
+            <TabsTrigger value="subscriptions">
+              {translate("resources.subscriptions.name", { smart_count: 2 })}
             </TabsTrigger>
             <TabsTrigger value="details">
               {translate("crm.common.details")}
@@ -183,6 +161,10 @@ const ContactShowContentMobile = () => {
 
           <TabsContent value="tasks" className="mt-4">
             <ContactTasksList />
+          </TabsContent>
+
+          <TabsContent value="subscriptions" className="mt-4">
+            <ContactSubscriptionsMobilePanel contactId={record.id} />
           </TabsContent>
 
           <TabsContent value="details" className="mt-4">
@@ -235,8 +217,75 @@ const ContactShowContentMobile = () => {
   );
 };
 
-const ContactShowContent = () => {
+/** Mobile subscriptions + booking history panel. */
+const ContactSubscriptionsMobilePanel = ({
+  contactId,
+}: {
+  contactId: string | number;
+}) => {
   const translate = useTranslate();
+  const { data: subscriptions = [], isPending: subsLoading } =
+    useGetList<SubscriptionSummary>("subscriptions", {
+      filter: { "contact_id@eq": contactId },
+      pagination: { page: 1, perPage: 50 },
+      sort: { field: "purchased_at", order: "DESC" },
+    });
+  const { data: bookings = [], isPending: bookingsLoading } =
+    useGetList<Booking>("bookings", {
+      filter: { "contact_id@eq": contactId },
+      pagination: { page: 1, perPage: 50 },
+      sort: { field: "created_at", order: "DESC" },
+    });
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h3 className="text-lg font-semibold">
+          {translate("resources.subscriptions.name", { smart_count: 2 })}
+        </h3>
+        <Separator className="my-2" />
+        {subsLoading && (
+          <p className="text-sm text-muted-foreground">
+            {translate("crm.common.loading")}
+          </p>
+        )}
+        {!subsLoading && subscriptions.length === 0 && (
+          <p className="text-sm text-muted-foreground">
+            {translate("resources.subscriptions.empty.description")}
+          </p>
+        )}
+        {!subsLoading &&
+          subscriptions.map((sub) => (
+            <SubscriptionListItem key={sub.id} subscription={sub} />
+          ))}
+        <div className="mt-2">
+          <BuyPackDialog contactId={contactId} />
+        </div>
+      </div>
+      <div>
+        <h3 className="text-lg font-semibold">
+          {translate("resources.bookings.panel.history")}
+        </h3>
+        <Separator className="my-2" />
+        {bookingsLoading && (
+          <p className="text-sm text-muted-foreground">
+            {translate("crm.common.loading")}
+          </p>
+        )}
+        {!bookingsLoading && bookings.length === 0 && (
+          <p className="text-sm text-muted-foreground">
+            {translate("resources.bookings.panel.empty")}
+          </p>
+        )}
+        {!bookingsLoading && bookings.length > 0 && (
+          <BookingHistoryList bookings={bookings} />
+        )}
+      </div>
+    </div>
+  );
+};
+
+const ContactShowContent = () => {
   const { record, isPending } = useShowContext<Contact>();
   if (isPending || !record) return null;
 
@@ -251,33 +300,6 @@ const ContactShowContent = () => {
                 <h5 className="text-xl font-semibold">
                   <RecordRepresentation />
                 </h5>
-                <div className="inline-flex text-sm text-muted-foreground">
-                  {record.title && record.company_id != null
-                    ? `${translate("resources.contacts.position_at", {
-                        title: record.title,
-                      })} `
-                    : record.title}
-                  {record.company_id != null && (
-                    <ReferenceField
-                      source="company_id"
-                      reference="companies"
-                      link="show"
-                    >
-                      &nbsp;
-                      <TextField source="name" />
-                    </ReferenceField>
-                  )}
-                </div>
-              </div>
-              <div>
-                <ReferenceField
-                  source="company_id"
-                  reference="companies"
-                  link="show"
-                  className="no-underline"
-                >
-                  <CompanyAvatar />
-                </ReferenceField>
               </div>
             </div>
             <InfiniteListBase

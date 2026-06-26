@@ -32,7 +32,6 @@ export interface ContactsTable {
   has_newsletter: boolean | null;
   status: string | null;
   tags: number[] | null;
-  company_id: number | null;
   sales_id: number | null;
   linkedin_url: string | null;
 }
@@ -57,28 +56,10 @@ interface ContactNotesTable {
   attachments: unknown[] | null; // JSONB array
 }
 
-interface DealsTable {
-  id: Generated<number>;
-  name: string;
-  company_id: number | null;
-  contact_ids: number[];
-  category: string | null;
-  stage: string;
-  description: string | null;
-  amount: number | null;
-  created_at: Date;
-  updated_at: Date;
-  archived_at: Date | null;
-  expected_closing_date: Date | null;
-  sales_id: number | null;
-  index: number | null;
-}
-
 interface Database {
   contacts: ContactsTable;
   tasks: TasksTable;
   contact_notes: ContactNotesTable;
-  deals: DealsTable;
 }
 
 // Deno Postgres Driver for Kysely

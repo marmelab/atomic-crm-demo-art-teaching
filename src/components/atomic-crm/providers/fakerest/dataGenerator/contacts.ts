@@ -1,30 +1,15 @@
-import {
-  company as fakerCompany,
-  internet,
-  lorem,
-  name,
-  phone,
-  random,
-} from "faker/locale/en_US";
+import { internet, lorem, name, phone, random } from "faker/locale/en_US";
 
 import { defaultNoteStatuses } from "../../../root/defaultConfiguration";
 import { contactGender } from "../../../contacts/contactModel";
-import type { Company, Contact } from "../../../types";
+import type { Contact } from "../../../types";
 import type { Db } from "./types";
 import { randomDate, weightedBoolean } from "./utils";
-
-const maxContacts = {
-  1: 1,
-  10: 4,
-  50: 12,
-  250: 25,
-  500: 50,
-};
 
 const getRandomContactDetailsType = () =>
   random.arrayElement(["Work", "Home", "Other"]) as "Work" | "Home" | "Other";
 
-export const generateContacts = (db: Db, size = 500): Required<Contact>[] => {
+export const generateContacts = (db: Db, size = 500): Contact[] => {
   const nbAvailblePictures = 223;
   let numberOfContacts = 0;
 
@@ -57,20 +42,13 @@ export const generateContacts = (db: Db, size = 500): Required<Contact>[] => {
           ".jpeg"
         : undefined,
     };
-    const title = fakerCompany.bsAdjective();
 
     if (has_avatar) {
       numberOfContacts++;
     }
 
-    // choose company with people left to know
-    let company: Company;
-    do {
-      company = random.arrayElement(db.companies);
-    } while ((company.nb_contacts ?? 0) >= maxContacts[company.size]);
-    company.nb_contacts = (company.nb_contacts ?? 0) + 1;
-
-    const first_seen = randomDate(new Date(company.created_at)).toISOString();
+    const sales_id = random.arrayElement(db.sales).id;
+    const first_seen = randomDate(new Date("2020-01-01")).toISOString();
     const last_seen = first_seen;
 
     return {
@@ -78,9 +56,6 @@ export const generateContacts = (db: Db, size = 500): Required<Contact>[] => {
       first_name,
       last_name,
       gender,
-      title: title.charAt(0).toUpperCase() + title.substr(1),
-      company_id: company.id,
-      company_name: company.name,
       email_jsonb,
       phone_jsonb,
       background: lorem.sentence(),
@@ -93,7 +68,7 @@ export const generateContacts = (db: Db, size = 500): Required<Contact>[] => {
       tags: random
         .arrayElements(db.tags, random.arrayElement([0, 0, 0, 1, 1, 2]))
         .map((tag) => tag.id), // finalize
-      sales_id: company.sales_id!,
+      sales_id,
       nb_tasks: 0,
       linkedin_url: null,
     };

@@ -5,99 +5,41 @@
 
 create or replace view public.activity_log with (security_invoker = on) as
 select
-    ('company.' || c.id || '.created') as id,
-    'company.created' as type,
-    c.created_at as date,
-    c.id as company_id,
-    c.sales_id,
-    to_json(c.*) as company,
-    null::json as contact,
-    null::json as deal,
-    null::json as contact_note,
-    null::json as deal_note
-from public.companies c
-union all
-select
     ('contact.' || co.id || '.created') as id,
     'contact.created' as type,
     co.first_seen as date,
-    co.company_id,
     co.sales_id,
-    null::json as company,
     to_json(co.*) as contact,
-    null::json as deal,
-    null::json as contact_note,
-    null::json as deal_note
+    null::json as contact_note
 from public.contacts co
 union all
 select
     ('contactNote.' || cn.id || '.created') as id,
     'contactNote.created' as type,
     cn.date,
-    co.company_id,
     cn.sales_id,
-    null::json as company,
     null::json as contact,
-    null::json as deal,
-    to_json(cn.*) as contact_note,
-    null::json as deal_note
-from public.contact_notes cn
-    left join public.contacts co on co.id = cn.contact_id
-union all
-select
-    ('deal.' || d.id || '.created') as id,
-    'deal.created' as type,
-    d.created_at as date,
-    d.company_id,
-    d.sales_id,
-    null::json as company,
-    null::json as contact,
-    to_json(d.*) as deal,
-    null::json as contact_note,
-    null::json as deal_note
-from public.deals d
-union all
-select
-    ('dealNote.' || dn.id || '.created') as id,
-    'dealNote.created' as type,
-    dn.date,
-    d.company_id,
-    dn.sales_id,
-    null::json as company,
-    null::json as contact,
-    null::json as deal,
-    null::json as contact_note,
-    to_json(dn.*) as deal_note
-from public.deal_notes dn
-    left join public.deals d on d.id = dn.deal_id;
+    to_json(cn.*) as contact_note
+from public.contact_notes cn;
 
-create or replace view public.companies_summary with (security_invoker = on) as
+-- subscriptions_summary: sessions_used = count of attended bookings on the pack;
+-- sessions_remaining = total_sessions - sessions_used.
+-- Defined before contacts_summary because contacts_summary references it.
+create or replace view public.subscriptions_summary with (security_invoker = on) as
 select
-    c.id,
-    c.created_at,
-    c.name,
-    c.sector,
-    c.size,
-    c.linkedin_url,
-    c.website,
-    c.phone_number,
-    c.address,
-    c.zipcode,
-    c.city,
-    c.state_abbr,
-    c.sales_id,
-    c.context_links,
-    c.country,
-    c.description,
-    c.revenue,
-    c.tax_identifier,
-    c.logo,
-    count(distinct d.id) as nb_deals,
-    count(distinct co.id) as nb_contacts
-from public.companies c
-    left join public.deals d on c.id = d.company_id
-    left join public.contacts co on c.id = co.company_id
-group by c.id;
+    s.id,
+    s.created_at,
+    s.contact_id,
+    s.total_sessions,
+    s.purchased_at,
+    s.price,
+    s.notes,
+    s.sales_id,
+    count(b.id) filter (where b.status = 'attended') as sessions_used,
+    s.total_sessions - count(b.id) filter (where b.status = 'attended') as sessions_remaining
+from public.subscriptions s
+left join public.bookings b on b.subscription_id = s.id
+group by s.id;
 
 create or replace view public.contacts_summary with (security_invoker = on) as
 select
@@ -113,19 +55,52 @@ select
     co.has_newsletter,
     co.status,
     co.tags,
-    co.company_id,
     co.sales_id,
     co.linkedin_url,
     co.email_jsonb,
     co.phone_jsonb,
     (jsonb_path_query_array(co.email_jsonb, '$[*]."email"'))::text as email_fts,
     (jsonb_path_query_array(co.phone_jsonb, '$[*]."number"'))::text as phone_fts,
-    c.name as company_name,
-    count(distinct t.id) filter (where t.done_date is null) as nb_tasks
+    count(distinct t.id) filter (where t.done_date is null) as nb_tasks,
+    coalesce(sum(ss.sessions_remaining), 0) as total_sessions_remaining
 from public.contacts co
     left join public.tasks t on co.id = t.contact_id
-    left join public.companies c on co.company_id = c.id
-group by co.id, c.name;
+    left join public.subscriptions_summary ss on co.id = ss.contact_id
+group by co.id;
+
+-- sessions_summary: nb_booked = live (non-cancelled) booking count;
+-- nb_attended = count of attended bookings.
+create or replace view public.sessions_summary with (security_invoker = on) as
+select
+    s.id,
+    s.created_at,
+    s.starts_at,
+    s.duration_minutes,
+    s.capacity,
+    s.overbooking,
+    s.notes,
+    s.sales_id,
+    count(b.id) filter (where b.status <> 'cancelled') as nb_booked,
+    count(b.id) filter (where b.status = 'attended') as nb_attended
+from public.sessions s
+left join public.bookings b on b.session_id = s.id
+group by s.id;
+
+-- monthly_attendance: one row per (contact, calendar month), counting attended bookings.
+-- id is a synthetic string: contact_id || '-' || 'YYYY-MM'.
+create or replace view public.monthly_attendance with (security_invoker = on) as
+select
+    (co.id::text || '-' || to_char(date_trunc('month', s.starts_at), 'YYYY-MM')) as id,
+    co.id as contact_id,
+    co.first_name,
+    co.last_name,
+    date_trunc('month', s.starts_at)::date as month,
+    count(b.id) as sessions_attended
+from public.bookings b
+join public.sessions s on s.id = b.session_id
+join public.contacts co on co.id = b.contact_id
+where b.status = 'attended'
+group by co.id, co.first_name, co.last_name, date_trunc('month', s.starts_at);
 
 create or replace view public.init_state with (security_invoker = off) as
 select count(sub.id) as is_initialized
