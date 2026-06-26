@@ -70,6 +70,8 @@ export type Contact = {
   background: string;
   phone_jsonb: PhoneNumberAndType[];
   nb_tasks?: number;
+  /** Total prepaid sessions remaining across all packs for this student. */
+  total_sessions_remaining?: number;
 } & Pick<RaRecord, "id">;
 
 export type ContactNote = {
@@ -146,6 +148,22 @@ export type Booking = {
   cancelled_at?: string | null;
   sales_id?: Identifier;
 } & Pick<RaRecord, "id">;
+
+/**
+ * One row per (student, calendar month) from the monthly_attendance view.
+ * id = contact_id + '-' + 'YYYY-MM' (synthetic, string).
+ */
+export type MonthlyAttendance = {
+  /** Synthetic id: "<contact_id>-<YYYY-MM>" */
+  id: string;
+  contact_id: Identifier;
+  first_name: string;
+  last_name: string;
+  /** ISO date string for the first day of the month (date_trunc result). */
+  month: string;
+  /** Count of bookings with status='attended' for this student this month. */
+  sessions_attended: number;
+};
 
 export type ActivityContactCreated = {
   type: typeof CONTACT_CREATED;

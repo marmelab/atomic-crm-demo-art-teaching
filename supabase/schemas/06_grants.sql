@@ -127,6 +127,10 @@ grant all on table public.sessions_summary to anon;
 grant all on table public.sessions_summary to authenticated;
 grant all on table public.sessions_summary to service_role;
 
+grant all on table public.monthly_attendance to anon;
+grant all on table public.monthly_attendance to authenticated;
+grant all on table public.monthly_attendance to service_role;
+
 -- Sequence grants
 grant all on sequence public."contactNotes_id_seq" to anon;
 grant all on sequence public."contactNotes_id_seq" to authenticated;

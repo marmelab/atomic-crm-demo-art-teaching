@@ -413,6 +413,14 @@ export const frenchCrmMessages = {
         whats_next: "Et ensuite ?",
       },
       upcoming_tasks: "Tâches à venir",
+      monthly_recap: {
+        title: "Récapitulatif mensuel",
+        column_student: "Élève",
+        column_sessions_attended: "Séances assistées",
+        column_prepaid_remaining: "Séances prépayées restantes",
+        month_picker_label: "Mois",
+        empty: "Aucune donnée de présence pour ce mois.",
+      },
     },
     header: {
       import_data: "Importer des données",
