@@ -311,6 +311,31 @@ export const frenchCrmMessages = {
           "La liste des participants apparaîtra ici une fois les réservations ajoutées.",
       },
     },
+    bookings: {
+      name: "Réservation |||| Réservations",
+      forcedCaseName: "Réservation",
+      fields: {
+        session_id: "Séance",
+        contact_id: "Élève",
+        subscription_id: "Abonnement",
+        type: "Type de réservation",
+        status: "Statut",
+        cancelled_at: "Annulé le",
+        sales_id: "Responsable de compte",
+        created_at: "Créé le",
+      },
+      type: {
+        subscription: "Abonnement",
+        single: "Séance unique",
+        discovery: "Découverte",
+      },
+      status: {
+        booked: "Réservé",
+        attended: "Présent",
+        cancelled: "Annulé",
+        no_show: "Absent",
+      },
+    },
   },
   crm: {
     action: {

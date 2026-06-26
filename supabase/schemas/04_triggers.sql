@@ -24,6 +24,15 @@ create or replace trigger set_session_sales_id_trigger
     before insert on public.sessions
     for each row execute function public.set_sales_id_default();
 
+create or replace trigger set_booking_sales_id_trigger
+    before insert on public.bookings
+    for each row execute function public.set_sales_id_default();
+
+-- Enforce per-session booking capacity before each booking insert or update
+create or replace trigger check_session_capacity_trigger
+    before insert or update on public.bookings
+    for each row execute function public.check_session_capacity();
+
 -- Lowercase contact emails before insert or update (must run before contact_saved)
 create or replace trigger "10_lowercase_contact_emails"
     before insert or update on public.contacts

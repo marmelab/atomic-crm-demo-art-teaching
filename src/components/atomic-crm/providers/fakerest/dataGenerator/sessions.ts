@@ -1,6 +1,6 @@
 import { datatype, random } from "faker/locale/en_US";
 
-import type { Session, SessionSummary } from "../../../types";
+import type { Booking, Session, SessionSummary } from "../../../types";
 import type { Db } from "./types";
 
 const DURATION_OPTIONS = [60, 90, 120, 150] as const;
@@ -33,12 +33,19 @@ export const generateSessions = (db: Db, size = 40): Session[] =>
 
 /**
  * Derives the sessions_summary view from the base session records.
- * nb_booked and nb_attended are both 0 because the bookings table does not exist yet (TASK-005).
- * Once bookings ship, these should be computed from booking records for each session.
+ * nb_booked = count of live (non-cancelled) bookings per session.
+ * nb_attended = count of attended bookings per session.
  */
-export const toSessionsSummary = (sessions: Session[]): SessionSummary[] =>
-  sessions.map((s) => ({
-    ...s,
-    nb_booked: 0,
-    nb_attended: 0,
-  }));
+export const toSessionsSummary = (
+  sessions: Session[],
+  bookings: Booking[],
+): SessionSummary[] =>
+  sessions.map((s) => {
+    const sessionBookings = bookings.filter((b) => b.session_id === s.id);
+    return {
+      ...s,
+      nb_booked: sessionBookings.filter((b) => b.status !== "cancelled").length,
+      nb_attended: sessionBookings.filter((b) => b.status === "attended")
+        .length,
+    };
+  });

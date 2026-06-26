@@ -40,6 +40,8 @@ import {
 } from "./ConfigurationContext";
 import type { CrmDataProvider } from "../providers/types";
 import {
+  defaultBookingStatuses,
+  defaultBookingTypes,
   defaultDarkModeLogo,
   defaultLightModeLogo,
   defaultNoteStatuses,
@@ -100,6 +102,8 @@ export const CRM = ({
   lightModeLogo = defaultLightModeLogo,
   noteStatuses = defaultNoteStatuses,
   taskTypes = defaultTaskTypes,
+  bookingTypes = defaultBookingTypes,
+  bookingStatuses = defaultBookingStatuses,
   title = defaultTitle,
   dataProvider = defaultDataProviderBuilder(),
   authProvider = defaultAuthProviderBuilder(),
@@ -132,6 +136,8 @@ export const CRM = ({
       store.setItem(CONFIGURATION_STORE_KEY, {
         noteStatuses,
         taskTypes,
+        bookingTypes,
+        bookingStatuses,
         title,
         darkModeLogo,
         lightModeLogo,

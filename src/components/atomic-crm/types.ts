@@ -107,7 +107,9 @@ export type Subscription = {
 } & Pick<RaRecord, "id">;
 
 export type SubscriptionSummary = Subscription & {
+  /** Count of attended bookings on this pack. */
   sessions_used: number;
+  /** total_sessions - sessions_used. */
   sessions_remaining: number;
 };
 
@@ -122,11 +124,28 @@ export type Session = {
 } & Pick<RaRecord, "id">;
 
 export type SessionSummary = Session & {
-  /** Count of bookings with status != 'cancelled'. Always 0 until TASK-005 ships. */
+  /** Count of live (non-cancelled) bookings for this session. */
   nb_booked: number;
-  /** Count of bookings with status = 'attended'. Always 0 until TASK-005 ships. */
+  /** Count of bookings with status = 'attended' for this session. */
   nb_attended: number;
 };
+
+/** The booking type determines how the student obtained their spot. */
+export type BookingType = "subscription" | "single" | "discovery";
+
+/** The lifecycle status of a booking. */
+export type BookingStatus = "booked" | "attended" | "cancelled" | "no_show";
+
+export type Booking = {
+  created_at: string;
+  session_id: Identifier;
+  contact_id: Identifier;
+  subscription_id?: Identifier | null;
+  type: BookingType;
+  status: BookingStatus;
+  cancelled_at?: string | null;
+  sales_id?: Identifier;
+} & Pick<RaRecord, "id">;
 
 export type ActivityContactCreated = {
   type: typeof CONTACT_CREATED;

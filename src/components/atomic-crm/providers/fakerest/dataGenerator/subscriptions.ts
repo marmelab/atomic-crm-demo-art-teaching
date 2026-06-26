@@ -1,6 +1,6 @@
 import { datatype, random } from "faker/locale/en_US";
 
-import type { Subscription, SubscriptionSummary } from "../../../types";
+import type { Booking, Subscription, SubscriptionSummary } from "../../../types";
 import type { Db } from "./types";
 import { randomDate } from "./utils";
 
@@ -38,14 +38,20 @@ export const generateSubscriptions = (db: Db, size = 100): Subscription[] =>
 
 /**
  * Derives the subscriptions_summary view from the base subscription records.
- * sessions_used is 0 because the bookings table does not exist yet (TASK-005).
- * Once bookings ship, sessions_used should count attended bookings for the pack.
+ * sessions_used = count of attended bookings linked to each subscription pack.
+ * sessions_remaining = total_sessions - sessions_used.
  */
 export const toSubscriptionsSummary = (
   subscriptions: Subscription[],
+  bookings: Booking[],
 ): SubscriptionSummary[] =>
-  subscriptions.map((s) => ({
-    ...s,
-    sessions_used: 0,
-    sessions_remaining: s.total_sessions,
-  }));
+  subscriptions.map((s) => {
+    const sessionsUsed = bookings.filter(
+      (b) => b.subscription_id === s.id && b.status === "attended",
+    ).length;
+    return {
+      ...s,
+      sessions_used: sessionsUsed,
+      sessions_remaining: s.total_sessions - sessionsUsed,
+    };
+  });

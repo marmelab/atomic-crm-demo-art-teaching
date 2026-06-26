@@ -24,9 +24,26 @@ export const defaultTaskTypes = [
   { value: "call", label: "Call" },
 ];
 
+/** Booking type choices — how the student obtained their spot. */
+export const defaultBookingTypes = [
+  { value: "subscription", label: "Subscription" },
+  { value: "single", label: "Single" },
+  { value: "discovery", label: "Discovery" },
+];
+
+/** Booking status choices — lifecycle state of a booking. */
+export const defaultBookingStatuses = [
+  { value: "booked", label: "Booked" },
+  { value: "attended", label: "Attended" },
+  { value: "cancelled", label: "Cancelled" },
+  { value: "no_show", label: "No-show" },
+];
+
 export const defaultConfiguration: ConfigurationContextValue = {
   noteStatuses: defaultNoteStatuses,
   taskTypes: defaultTaskTypes,
+  bookingTypes: defaultBookingTypes,
+  bookingStatuses: defaultBookingStatuses,
   title: defaultTitle,
   darkModeLogo: defaultDarkModeLogo,
   lightModeLogo: defaultLightModeLogo,

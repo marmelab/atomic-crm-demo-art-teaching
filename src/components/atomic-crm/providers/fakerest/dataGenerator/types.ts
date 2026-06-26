@@ -1,4 +1,5 @@
 import type {
+  Booking,
   Contact,
   ContactNote,
   Sale,
@@ -21,5 +22,6 @@ export interface Db {
   subscriptions_summary: SubscriptionSummary[];
   sessions: Session[];
   sessions_summary: SessionSummary[];
+  bookings: Booking[];
   configuration: Array<{ id: number; config: ConfigurationContextValue }>;
 }

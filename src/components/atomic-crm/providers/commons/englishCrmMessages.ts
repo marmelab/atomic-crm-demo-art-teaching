@@ -305,6 +305,31 @@ export const englishCrmMessages = {
         placeholder: "Student roster will appear here once bookings are added.",
       },
     },
+    bookings: {
+      name: "Booking |||| Bookings",
+      forcedCaseName: "Booking",
+      fields: {
+        session_id: "Session",
+        contact_id: "Student",
+        subscription_id: "Subscription",
+        type: "Booking type",
+        status: "Status",
+        cancelled_at: "Cancelled at",
+        sales_id: "Account manager",
+        created_at: "Created at",
+      },
+      type: {
+        subscription: "Subscription",
+        single: "Single",
+        discovery: "Discovery",
+      },
+      status: {
+        booked: "Booked",
+        attended: "Attended",
+        cancelled: "Cancelled",
+        no_show: "No-show",
+      },
+    },
   },
   crm: {
     action: {
