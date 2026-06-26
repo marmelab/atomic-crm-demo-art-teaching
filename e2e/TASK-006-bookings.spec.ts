@@ -12,7 +12,7 @@ test.describe("Booking management", () => {
       password: "password",
     });
 
-    const student = await createContact({
+    await createContact({
       first_name: "Alice",
       last_name: "Demo",
       sales_id: teacher.id,
@@ -83,9 +83,7 @@ test.describe("Booking management", () => {
     // Assert: the capacity badge live count increased
     await expect(page.getByTestId("capacity-badge").first()).toBeVisible();
 
-    // Verify that we can see the student's name mentioned in the row
+    // Verify that the student's name appears in the roster row
     await expect(page.getByText(/Alice Demo/i)).toBeVisible();
-
-    void student; // student is used for asserting the name is visible
   });
 });
