@@ -69,7 +69,7 @@ export const DesktopError = () => (
     dataProvider={{
       getList: async (resource) => {
         if (resource === "contacts") {
-          throw new Error("Error loading contacts");
+          throw new Error("Error loading students");
         }
         return { data: [], total: 0 };
       },
