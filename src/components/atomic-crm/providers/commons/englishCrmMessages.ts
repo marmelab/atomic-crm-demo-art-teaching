@@ -329,6 +329,20 @@ export const englishCrmMessages = {
         cancelled: "Cancelled",
         no_show: "No-show",
       },
+      action: {
+        add_student: "Add student",
+        buy_pack: "Buy pack",
+        mark_attended: "Attended",
+        mark_no_show: "No-show",
+        cancel: "Cancel",
+        created: "Booking created",
+        pack_created: "Subscription created",
+        status_updated: "Booking updated",
+      },
+      panel: {
+        history: "Booking history",
+        empty: "No bookings yet",
+      },
     },
   },
   crm: {
