@@ -96,6 +96,21 @@ export type Task = {
   sales_id?: Identifier;
 } & Pick<RaRecord, "id">;
 
+export type Subscription = {
+  contact_id: Identifier;
+  created_at: string;
+  total_sessions: number;
+  purchased_at: string;
+  price?: number | null;
+  notes?: string | null;
+  sales_id?: Identifier;
+} & Pick<RaRecord, "id">;
+
+export type SubscriptionSummary = Subscription & {
+  sessions_used: number;
+  sessions_remaining: number;
+};
+
 export type ActivityContactCreated = {
   type: typeof CONTACT_CREATED;
   sales_id?: Identifier;

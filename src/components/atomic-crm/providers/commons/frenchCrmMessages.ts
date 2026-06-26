@@ -259,6 +259,30 @@ export const frenchCrmMessages = {
         name_placeholder: "Saisir le nom de l'étiquette",
       },
     },
+    subscriptions: {
+      name: "Abonnement |||| Abonnements",
+      forcedCaseName: "Abonnement",
+      fields: {
+        contact_id: "Élève",
+        total_sessions: "Séances totales",
+        purchased_at: "Date d'achat",
+        price: "Prix",
+        notes: "Notes",
+        sessions_used: "Séances utilisées",
+        sessions_remaining: "Séances restantes",
+        sales_id: "Responsable de compte",
+        created_at: "Créé le",
+      },
+      action: {
+        new: "Nouvel abonnement",
+        create: "Créer un abonnement",
+        edit: "Modifier l'abonnement",
+      },
+      empty: {
+        title: "Aucun abonnement trouvé",
+        description: "Il semble qu'il n'y ait pas encore d'abonnements.",
+      },
+    },
   },
   crm: {
     action: {

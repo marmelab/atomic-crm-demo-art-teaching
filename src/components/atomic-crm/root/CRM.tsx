@@ -16,6 +16,7 @@ import { SetPasswordPage } from "@/components/supabase/set-password-page";
 import { OAuthConsentPage } from "@/components/supabase/oauth-consent-page";
 
 import contacts from "../contacts";
+import subscriptions from "../subscriptions";
 import { Dashboard } from "../dashboard/Dashboard";
 import { MobileDashboard } from "../dashboard/MobileDashboard";
 import { Layout } from "../layout/Layout";
@@ -237,6 +238,7 @@ const DesktopAdmin = (
         <Route path={ChangelogPage.path} element={<ChangelogPage />} />
       </CustomRoutes>
       <Resource name="contacts" {...contacts} />
+      <Resource name="subscriptions" {...subscriptions} />
       <Resource name="contact_notes" />
       <Resource name="tasks" />
       <Resource name="sales" {...sales} />
