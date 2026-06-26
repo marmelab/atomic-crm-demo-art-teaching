@@ -38,6 +38,8 @@ export const BookingInputs = ({
       <SelectInput
         source="type"
         choices={bookingTypes}
+        optionText="label"
+        optionValue="value"
         validate={required()}
         helperText={false}
       />
