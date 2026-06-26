@@ -11,10 +11,7 @@ const adminSupabase = createClient(
 const TABLES = [
   "tasks",
   "contact_notes",
-  "deal_notes",
-  "deals",
   "contacts",
-  "companies",
   "tags",
   "favicons_excluded_domains",
   "configuration",
@@ -120,38 +117,16 @@ async function createNotes({
   }
 }
 
-async function createCompany({
-  name,
-  salesId,
-}: {
-  name: string;
-  salesId: string | number;
-}) {
-  const { data, error } = await adminSupabase
-    .from("companies")
-    .insert({ name, sales_id: salesId })
-    .select("id")
-    .single();
-
-  if (error) {
-    throw new Error(`Failed to create company: ${error.message}`);
-  }
-
-  return data;
-}
-
 async function createContact({
   first_name,
   last_name,
   title = "",
-  company_id = null,
   sales_id,
   notes = [],
 }: {
   first_name: string;
   last_name: string;
   title?: string;
-  company_id?: string | number | null;
   sales_id: string | number;
   notes?: {
     text: string;
@@ -165,7 +140,6 @@ async function createContact({
       first_name,
       last_name,
       title,
-      company_id,
       sales_id,
       first_seen: new Date().toISOString(),
       last_seen: new Date().toISOString(),
@@ -215,7 +189,6 @@ export const test = base.extend<{
   resetDb: void;
   createUser: typeof createUser;
   createSales: typeof createSales;
-  createCompany: typeof createCompany;
   createContact: typeof createContact;
   createNotes: typeof createNotes;
   menu: ReturnType<typeof getMenuMethod>;
@@ -238,10 +211,6 @@ export const test = base.extend<{
   // eslint-disable-next-line no-empty-pattern
   createSales: async ({}, cb) => {
     await cb(createSales);
-  },
-  // eslint-disable-next-line no-empty-pattern
-  createCompany: async ({}, cb) => {
-    await cb(createCompany);
   },
   // eslint-disable-next-line no-empty-pattern
   createContact: async ({}, cb) => {

@@ -45,9 +45,7 @@ const getDataProviderWithCustomMethods = () => {
           data: data.map((row: any) => ({
             ...row,
             contactNote: row.contact_note ?? undefined,
-            dealNote: row.deal_note ?? undefined,
             contact_note: undefined,
-            deal_note: undefined,
           })),
           total,
         };

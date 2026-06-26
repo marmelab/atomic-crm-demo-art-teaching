@@ -25,9 +25,6 @@ test("user onboarding", async ({ page, isMobile, menu, dismissToast }) => {
   await page.getByLabel("First name").fill("Jane");
   await page.getByLabel("Last name").fill("Smith");
   await page.getByLabel("Title").fill("CEO");
-  await page.getByLabel("Company").click();
-  await page.getByPlaceholder("Search").fill("Smith Corp");
-  await page.getByText("Create Smith Corp").click();
   await page
     .getByRole("group", { name: "Email addresses" })
     .getByRole("textbox", { name: "Email" })
@@ -63,7 +60,6 @@ test("user onboarding", async ({ page, isMobile, menu, dismissToast }) => {
   await dismissToast("Element created");
 
   await expect(page.locator(isMobile ? "h2" : "h5")).toHaveText("Jane Smith");
-  await expect(page.getByText("CEO at Smith Corp")).toBeVisible();
 
   await menu.goToDashboard();
   await page.waitForLoadState("networkidle");
@@ -93,11 +89,7 @@ test("user onboarding", async ({ page, isMobile, menu, dismissToast }) => {
   await expect(page.getByText("Latest Activity")).toBeVisible();
   await expect(
     page.getByText("Latest Activity").locator("xpath=../.."),
-  ).toHaveText(/You added company Smith Corp today at/);
-
-  await expect(
-    page.getByText("Latest Activity").locator("xpath=../.."),
-  ).toHaveText(/You added Jane Smith to Smith Corp today at/);
+  ).toHaveText(/You added Jane Smith today at/);
 
   await expect(
     page.getByText("Latest Activity").locator("xpath=../.."),
