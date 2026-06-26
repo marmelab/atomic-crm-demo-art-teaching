@@ -85,7 +85,6 @@ export const BookingCreateDialog = ({
             >
               <div className="flex flex-col gap-4">
                 <BookingInputs
-                  sessionId={sessionId}
                   contactId={contactId as string | number | undefined}
                 />
                 <div className="flex justify-end gap-2">

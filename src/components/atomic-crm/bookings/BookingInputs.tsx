@@ -7,8 +7,6 @@ import { SelectInput } from "@/components/admin/select-input";
 import { useConfigurationContext } from "../root/ConfigurationContext";
 
 interface BookingInputsProps {
-  /** Fixed session_id — when set the session field is hidden and prefilled. */
-  sessionId?: string | number;
   /** Fixed contact_id — when set the contact field is hidden and prefilled. */
   contactId?: string | number;
 }
@@ -17,8 +15,9 @@ interface BookingInputsProps {
  * Shared form fields for booking create/edit forms.
  * Renders a ReferenceInput for the contact, a SelectInput for the booking type,
  * and a conditional ReferenceInput for the subscription (only when type === 'subscription').
+ * The session_id is handled via the parent form's defaultValues.
  */
-export const BookingInputs = ({ sessionId, contactId }: BookingInputsProps) => {
+export const BookingInputs = ({ contactId }: BookingInputsProps) => {
   const { bookingTypes } = useConfigurationContext();
   const type = useWatch({ name: "type" });
   // When contactId is fixed (e.g. from SessionShow) use it for subscription filter
