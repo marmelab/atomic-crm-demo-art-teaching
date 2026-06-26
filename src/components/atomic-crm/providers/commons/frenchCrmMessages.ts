@@ -335,6 +335,20 @@ export const frenchCrmMessages = {
         cancelled: "Annulé",
         no_show: "Absent",
       },
+      action: {
+        add_student: "Ajouter un élève",
+        buy_pack: "Acheter un pack",
+        mark_attended: "Présent",
+        mark_no_show: "Absent",
+        cancel: "Annuler",
+        created: "Réservation créée",
+        pack_created: "Abonnement créé",
+        status_updated: "Réservation mise à jour",
+      },
+      panel: {
+        history: "Historique des réservations",
+        empty: "Aucune réservation pour l'instant",
+      },
     },
   },
   crm: {

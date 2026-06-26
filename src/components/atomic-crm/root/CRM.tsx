@@ -247,6 +247,7 @@ const DesktopAdmin = (
       <Resource name="contacts" {...contacts} />
       <Resource name="subscriptions" {...subscriptions} />
       <Resource name="sessions" {...sessions} />
+      <Resource name="bookings" />
       <Resource name="contact_notes" />
       <Resource name="tasks" />
       <Resource name="sales" {...sales} />
