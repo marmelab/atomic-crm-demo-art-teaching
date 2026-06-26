@@ -47,10 +47,8 @@ from public.contacts co
     left join public.tasks t on co.id = t.contact_id
 group by co.id;
 
--- subscriptions_summary: exposes sessions_used and sessions_remaining.
--- Currently sessions_used is 0 (bookings table does not exist yet — see TASK-005).
--- TASK-005 will rewrite this view to LEFT JOIN bookings and compute the real
--- attended count: sessions_used = COUNT(*) FILTER (WHERE b.status = 'attended').
+-- subscriptions_summary: sessions_used = count of attended bookings on the pack;
+-- sessions_remaining = total_sessions - sessions_used.
 create or replace view public.subscriptions_summary with (security_invoker = on) as
 select
     s.id,
@@ -61,15 +59,14 @@ select
     s.price,
     s.notes,
     s.sales_id,
-    0::bigint as sessions_used,
-    s.total_sessions::bigint as sessions_remaining
-from public.subscriptions s;
+    count(b.id) filter (where b.status = 'attended') as sessions_used,
+    s.total_sessions - count(b.id) filter (where b.status = 'attended') as sessions_remaining
+from public.subscriptions s
+left join public.bookings b on b.subscription_id = s.id
+group by s.id;
 
--- sessions_summary: exposes nb_booked and nb_attended.
--- Currently both are 0 because the bookings table does not exist yet (TASK-005).
--- TASK-005 will rewrite this view to LEFT JOIN bookings and compute the real counts:
---   nb_booked  = COUNT(*) FILTER (WHERE b.status <> 'cancelled')
---   nb_attended = COUNT(*) FILTER (WHERE b.status = 'attended')
+-- sessions_summary: nb_booked = live (non-cancelled) booking count;
+-- nb_attended = count of attended bookings.
 create or replace view public.sessions_summary with (security_invoker = on) as
 select
     s.id,
@@ -80,9 +77,11 @@ select
     s.overbooking,
     s.notes,
     s.sales_id,
-    0::bigint as nb_booked,
-    0::bigint as nb_attended
-from public.sessions s;
+    count(b.id) filter (where b.status <> 'cancelled') as nb_booked,
+    count(b.id) filter (where b.status = 'attended') as nb_attended
+from public.sessions s
+left join public.bookings b on b.session_id = s.id
+group by s.id;
 
 create or replace view public.init_state with (security_invoker = off) as
 select count(sub.id) as is_initialized

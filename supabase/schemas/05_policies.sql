@@ -60,3 +60,10 @@ create policy "Enable read access for authenticated users" on public.sessions fo
 create policy "Enable insert for authenticated users only" on public.sessions for insert to authenticated with check (true);
 create policy "Enable update for authenticated users only" on public.sessions for update to authenticated using (true) with check (true);
 create policy "Session Delete Policy" on public.sessions for delete to authenticated using (true);
+
+-- Bookings
+alter table public.bookings enable row level security;
+create policy "Enable read access for authenticated users" on public.bookings for select to authenticated using (true);
+create policy "Enable insert for authenticated users only" on public.bookings for insert to authenticated with check (true);
+create policy "Enable update for authenticated users only" on public.bookings for update to authenticated using (true) with check (true);
+create policy "Booking Delete Policy" on public.bookings for delete to authenticated using (true);

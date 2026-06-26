@@ -413,3 +413,44 @@ BEGIN
   RETURN NEW;
 END;
 $$;
+
+CREATE OR REPLACE FUNCTION "public"."check_session_capacity"() RETURNS "trigger"
+    LANGUAGE "plpgsql"
+    SET "search_path" TO 'public'
+    AS $$
+DECLARE
+  v_capacity smallint;
+  v_overbooking smallint;
+  v_live_count bigint;
+BEGIN
+  -- Cancellations never consume capacity; skip check
+  IF NEW.status = 'cancelled' THEN
+    RETURN NEW;
+  END IF;
+
+  -- Read capacity and overbooking allowance for this session
+  SELECT capacity, overbooking
+    INTO v_capacity, v_overbooking
+    FROM public.sessions
+   WHERE id = NEW.session_id;
+
+  -- Count existing live (non-cancelled) bookings for the session,
+  -- excluding the current row on UPDATE so a status change doesn't
+  -- count the row twice.
+  SELECT COUNT(*)
+    INTO v_live_count
+    FROM public.bookings
+   WHERE session_id = NEW.session_id
+     AND status <> 'cancelled'
+     AND (TG_OP = 'INSERT' OR id <> NEW.id);
+
+  IF v_live_count >= (v_capacity + v_overbooking) THEN
+    RAISE EXCEPTION
+      'Session % is fully booked (capacity=%, overbooking=%, live_bookings=%)',
+      NEW.session_id, v_capacity, v_overbooking, v_live_count
+      USING ERRCODE = 'check_violation';
+  END IF;
+
+  RETURN NEW;
+END;
+$$;

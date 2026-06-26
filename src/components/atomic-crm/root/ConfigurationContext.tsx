@@ -9,6 +9,10 @@ export const CONFIGURATION_STORE_KEY = "app.configuration";
 export interface ConfigurationContextValue {
   noteStatuses: NoteStatus[];
   taskTypes: LabeledValue[];
+  /** Booking type options (how the student obtained their spot). */
+  bookingTypes: LabeledValue[];
+  /** Booking status options (lifecycle state of a booking). */
+  bookingStatuses: LabeledValue[];
   title: string;
   darkModeLogo: string;
   lightModeLogo: string;

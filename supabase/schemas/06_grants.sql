@@ -61,6 +61,10 @@ grant all on function public.set_sales_id_default() to anon;
 grant all on function public.set_sales_id_default() to authenticated;
 grant all on function public.set_sales_id_default() to service_role;
 
+grant execute on function public.check_session_capacity() to anon;
+grant execute on function public.check_session_capacity() to authenticated;
+grant execute on function public.check_session_capacity() to service_role;
+
 -- Table grants
 grant all on table public.contacts to anon;
 grant all on table public.contacts to authenticated;
@@ -97,6 +101,10 @@ grant all on table public.subscriptions to service_role;
 grant all on table public.sessions to anon;
 grant all on table public.sessions to authenticated;
 grant all on table public.sessions to service_role;
+
+grant all on table public.bookings to anon;
+grant all on table public.bookings to authenticated;
+grant all on table public.bookings to service_role;
 
 -- View grants
 grant all on table public.activity_log to anon;
@@ -151,6 +159,10 @@ grant all on sequence public.subscriptions_id_seq to service_role;
 grant all on sequence public.sessions_id_seq to anon;
 grant all on sequence public.sessions_id_seq to authenticated;
 grant all on sequence public.sessions_id_seq to service_role;
+
+grant all on sequence public.bookings_id_seq to anon;
+grant all on sequence public.bookings_id_seq to authenticated;
+grant all on sequence public.bookings_id_seq to service_role;
 
 -- Default privileges
 alter default privileges for role postgres in schema public grant all on sequences to postgres;
