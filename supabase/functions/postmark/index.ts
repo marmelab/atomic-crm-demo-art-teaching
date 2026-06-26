@@ -104,9 +104,6 @@ Deno.serve(async (req) => {
     firstName,
     lastName,
     email,
-    domain,
-    companyName,
-    website,
   } of contacts) {
     if (!email) {
       // Return a 403 to let Postmark know that it's no use to retry this request
@@ -119,13 +116,10 @@ Deno.serve(async (req) => {
     await addNoteToContact({
       salesEmail,
       email,
-      domain,
       firstName,
       lastName,
       noteContent,
       attachments,
-      companyName,
-      website,
     });
   }
 

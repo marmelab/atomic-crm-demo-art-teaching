@@ -37,14 +37,6 @@ describe("i18nProvider", () => {
     );
   });
 
-  it("translates recently added fr crm keys", async () => {
-    await i18nProvider.changeLocale("fr");
-
-    expect(i18nProvider.translate("resources.deals.empty.title")).toBe(
-      "Aucune affaire trouvée",
-    );
-  });
-
   it("uses browser french locale when available", () => {
     vi.stubGlobal("navigator", {
       language: "fr-FR",
