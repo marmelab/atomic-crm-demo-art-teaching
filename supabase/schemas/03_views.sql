@@ -65,6 +65,25 @@ select
     s.total_sessions::bigint as sessions_remaining
 from public.subscriptions s;
 
+-- sessions_summary: exposes nb_booked and nb_attended.
+-- Currently both are 0 because the bookings table does not exist yet (TASK-005).
+-- TASK-005 will rewrite this view to LEFT JOIN bookings and compute the real counts:
+--   nb_booked  = COUNT(*) FILTER (WHERE b.status <> 'cancelled')
+--   nb_attended = COUNT(*) FILTER (WHERE b.status = 'attended')
+create or replace view public.sessions_summary with (security_invoker = on) as
+select
+    s.id,
+    s.created_at,
+    s.starts_at,
+    s.duration_minutes,
+    s.capacity,
+    s.overbooking,
+    s.notes,
+    s.sales_id,
+    0::bigint as nb_booked,
+    0::bigint as nb_attended
+from public.sessions s;
+
 create or replace view public.init_state with (security_invoker = off) as
 select count(sub.id) as is_initialized
 from (

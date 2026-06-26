@@ -109,11 +109,17 @@ export const createDataProvider = ({
       if (resource === "subscriptions") {
         return baseDataProvider.getList("subscriptions_summary", params);
       }
+      if (resource === "sessions") {
+        return baseDataProvider.getList("sessions_summary", params);
+      }
       return baseDataProvider.getList(resource, params);
     },
     async getOne(resource: string, params: any) {
       if (resource === "subscriptions") {
         return baseDataProvider.getOne("subscriptions_summary", params);
+      }
+      if (resource === "sessions") {
+        return baseDataProvider.getOne("sessions_summary", params);
       }
       return baseDataProvider.getOne(resource, params);
     },
@@ -428,6 +434,43 @@ export const createDataProvider = ({
         },
         afterDelete: async (result) => {
           await baseDataProvider.delete("subscriptions_summary", {
+            id: result.data.id,
+            previousData: result.data,
+          });
+          return result;
+        },
+      },
+      {
+        // Keep sessions_summary in sync with sessions for FakeRest demo.
+        // In Supabase, this is a DB view; here we mirror it manually.
+        // nb_booked and nb_attended remain 0 until TASK-005 ships bookings.
+        resource: "sessions",
+        afterCreate: async (result) => {
+          const { id, ...rest } = result.data;
+          await baseDataProvider.create("sessions_summary", {
+            data: { ...rest, id, nb_booked: 0, nb_attended: 0 },
+          });
+          return result;
+        },
+        afterUpdate: async (result) => {
+          const { id, ...rest } = result.data;
+          const { data: prev } = await baseDataProvider.getOne(
+            "sessions_summary",
+            { id },
+          );
+          await baseDataProvider.update("sessions_summary", {
+            id,
+            data: {
+              ...rest,
+              nb_booked: prev?.nb_booked ?? 0,
+              nb_attended: prev?.nb_attended ?? 0,
+            },
+            previousData: prev,
+          });
+          return result;
+        },
+        afterDelete: async (result) => {
+          await baseDataProvider.delete("sessions_summary", {
             id: result.data.id,
             previousData: result.data,
           });

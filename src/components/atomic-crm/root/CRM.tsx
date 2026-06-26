@@ -17,6 +17,7 @@ import { OAuthConsentPage } from "@/components/supabase/oauth-consent-page";
 
 import contacts from "../contacts";
 import subscriptions from "../subscriptions";
+import sessions from "../sessions";
 import { Dashboard } from "../dashboard/Dashboard";
 import { MobileDashboard } from "../dashboard/MobileDashboard";
 import { Layout } from "../layout/Layout";
@@ -239,6 +240,7 @@ const DesktopAdmin = (
       </CustomRoutes>
       <Resource name="contacts" {...contacts} />
       <Resource name="subscriptions" {...subscriptions} />
+      <Resource name="sessions" {...sessions} />
       <Resource name="contact_notes" />
       <Resource name="tasks" />
       <Resource name="sales" {...sales} />
