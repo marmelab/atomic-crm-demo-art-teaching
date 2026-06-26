@@ -14,21 +14,9 @@ export const SessionInputs = () => (
       validate={required()}
       helperText={false}
     />
-    <NumberInput
-      source="duration_minutes"
-      min={1}
-      helperText={false}
-    />
-    <NumberInput
-      source="capacity"
-      min={1}
-      helperText={false}
-    />
-    <NumberInput
-      source="overbooking"
-      min={0}
-      helperText={false}
-    />
+    <NumberInput source="duration_minutes" min={1} helperText={false} />
+    <NumberInput source="capacity" min={1} helperText={false} />
+    <NumberInput source="overbooking" min={0} helperText={false} />
     <TextInput source="notes" multiline helperText={false} />
   </div>
 );

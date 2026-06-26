@@ -77,9 +77,7 @@ const SessionShowContent = () => {
       {/* Roster region — booking controls added in TASK-006 */}
       <Card>
         <CardHeader>
-          <CardTitle>
-            {translate("resources.sessions.roster.title")}
-          </CardTitle>
+          <CardTitle>{translate("resources.sessions.roster.title")}</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">

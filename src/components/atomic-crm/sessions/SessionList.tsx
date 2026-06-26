@@ -49,10 +49,7 @@ export const SessionList = () => {
             />
           )}
         />
-        <DataTable.Col
-          source="notes"
-          label="resources.sessions.fields.notes"
-        />
+        <DataTable.Col source="notes" label="resources.sessions.fields.notes" />
       </DataTable>
     </List>
   );
