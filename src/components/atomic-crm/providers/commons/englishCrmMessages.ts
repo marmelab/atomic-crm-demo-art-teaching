@@ -40,8 +40,6 @@ export const englishCrmMessages = {
         followed_by_you: "Followed by you",
         status_none: "None",
       },
-      position_at: "%{title} at",
-      position_at_company: "%{title} at %{company}",
       empty: {
         description: "It seems your contact list is empty.",
         title: "No contacts found",
@@ -376,16 +374,6 @@ export const englishCrmMessages = {
       app_title: "App Title",
       sections: {
         branding: "Branding",
-      },
-      validation: {
-        duplicate: "Duplicate %{display_name}: %{items}",
-        in_use:
-          "Cannot remove %{display_name} that are still used by deals: %{items}",
-        validating: "Validating…",
-        entities: {
-          categories: "categories",
-          stages: "stages",
-        },
       },
     },
     theme: {

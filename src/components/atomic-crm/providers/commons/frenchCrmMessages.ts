@@ -42,8 +42,6 @@ export const frenchCrmMessages = {
         followed_by_you: "Suivi par vous",
         status_none: "Aucun",
       },
-      position_at: "%{title} chez",
-      position_at_company: "%{title} chez %{company}",
       empty: {
         description: "Il semble que votre liste de contacts soit vide.",
         title: "Aucun contact trouvé",
@@ -383,16 +381,6 @@ export const frenchCrmMessages = {
       app_title: "Titre de l'application",
       sections: {
         branding: "Image de marque",
-      },
-      validation: {
-        duplicate: "%{display_name} en double : %{items}",
-        in_use:
-          "Impossible de supprimer %{display_name} encore utilisés par des affaires : %{items}",
-        validating: "Validation…",
-        entities: {
-          categories: "catégories",
-          stages: "étapes",
-        },
       },
     },
     theme: {

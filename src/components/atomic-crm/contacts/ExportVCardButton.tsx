@@ -41,7 +41,7 @@ export const ExportVCardButton = () => {
     }
 
     // Generate vCard content
-    const vCardContent = exportToVCard(contact, undefined, photoData);
+    const vCardContent = exportToVCard(contact, photoData);
 
     // Create blob and download
     const blob = new Blob([vCardContent], {
