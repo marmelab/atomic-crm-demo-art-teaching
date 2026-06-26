@@ -47,6 +47,24 @@ from public.contacts co
     left join public.tasks t on co.id = t.contact_id
 group by co.id;
 
+-- subscriptions_summary: exposes sessions_used and sessions_remaining.
+-- Currently sessions_used is 0 (bookings table does not exist yet — see TASK-005).
+-- TASK-005 will rewrite this view to LEFT JOIN bookings and compute the real
+-- attended count: sessions_used = COUNT(*) FILTER (WHERE b.status = 'attended').
+create or replace view public.subscriptions_summary with (security_invoker = on) as
+select
+    s.id,
+    s.created_at,
+    s.contact_id,
+    s.total_sessions,
+    s.purchased_at,
+    s.price,
+    s.notes,
+    s.sales_id,
+    0::bigint as sessions_used,
+    s.total_sessions::bigint as sessions_remaining
+from public.subscriptions s;
+
 create or replace view public.init_state with (security_invoker = off) as
 select count(sub.id) as is_initialized
 from (

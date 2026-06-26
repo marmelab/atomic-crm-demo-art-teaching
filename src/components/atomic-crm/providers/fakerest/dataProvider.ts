@@ -106,7 +106,16 @@ export const createDataProvider = ({
         const start = (page - 1) * perPage;
         return { data: all.slice(start, start + perPage), total: all.length };
       }
+      if (resource === "subscriptions") {
+        return baseDataProvider.getList("subscriptions_summary", params);
+      }
       return baseDataProvider.getList(resource, params);
+    },
+    async getOne(resource: string, params: any) {
+      if (resource === "subscriptions") {
+        return baseDataProvider.getOne("subscriptions_summary", params);
+      }
+      return baseDataProvider.getOne(resource, params);
     },
     signUp: async ({
       email,
@@ -384,6 +393,47 @@ export const createDataProvider = ({
         resource: "contact_notes",
         beforeSave: async (params) => preserveAttachmentMimeType(params),
       } satisfies ResourceCallbacks<ContactNote>,
+      {
+        // Keep subscriptions_summary in sync with subscriptions for FakeRest demo.
+        // In Supabase, this is a DB view; here we mirror it manually.
+        resource: "subscriptions",
+        afterCreate: async (result) => {
+          const { id, ...rest } = result.data;
+          await baseDataProvider.create("subscriptions_summary", {
+            data: {
+              ...rest,
+              id,
+              sessions_used: 0,
+              sessions_remaining: rest.total_sessions ?? 0,
+            },
+          });
+          return result;
+        },
+        afterUpdate: async (result) => {
+          const { id, ...rest } = result.data;
+          const { data: prev } = await baseDataProvider.getOne(
+            "subscriptions_summary",
+            { id },
+          );
+          await baseDataProvider.update("subscriptions_summary", {
+            id,
+            data: {
+              ...rest,
+              sessions_remaining:
+                (rest.total_sessions ?? 0) - (prev?.sessions_used ?? 0),
+            },
+            previousData: prev,
+          });
+          return result;
+        },
+        afterDelete: async (result) => {
+          await baseDataProvider.delete("subscriptions_summary", {
+            id: result.data.id,
+            previousData: result.data,
+          });
+          return result;
+        },
+      },
     ],
   ) as CrmDataProvider;
 

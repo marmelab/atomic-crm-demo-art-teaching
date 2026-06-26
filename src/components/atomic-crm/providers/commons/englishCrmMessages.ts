@@ -254,6 +254,30 @@ export const englishCrmMessages = {
         name_placeholder: "Enter tag name",
       },
     },
+    subscriptions: {
+      name: "Subscription |||| Subscriptions",
+      forcedCaseName: "Subscription",
+      fields: {
+        contact_id: "Student",
+        total_sessions: "Total sessions",
+        purchased_at: "Purchase date",
+        price: "Price",
+        notes: "Notes",
+        sessions_used: "Sessions used",
+        sessions_remaining: "Sessions remaining",
+        sales_id: "Account manager",
+        created_at: "Created at",
+      },
+      action: {
+        new: "New subscription",
+        create: "Create subscription",
+        edit: "Edit subscription",
+      },
+      empty: {
+        title: "No subscriptions found",
+        description: "It seems there are no subscriptions yet.",
+      },
+    },
   },
   crm: {
     action: {
