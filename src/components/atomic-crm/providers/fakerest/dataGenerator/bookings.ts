@@ -76,7 +76,8 @@ export const generateBookings = (db: Db): Booking[] => {
         );
         if (contactSubscriptions.length > 0) {
           type = "subscription";
-          subscriptionId = random.arrayElement(contactSubscriptions).id as number;
+          subscriptionId = random.arrayElement(contactSubscriptions)
+            .id as number;
         } else {
           // Fall back to single if no subscription exists
           type = "single";

@@ -1,6 +1,10 @@
 import { datatype, random } from "faker/locale/en_US";
 
-import type { Booking, Subscription, SubscriptionSummary } from "../../../types";
+import type {
+  Booking,
+  Subscription,
+  SubscriptionSummary,
+} from "../../../types";
 import type { Db } from "./types";
 import { randomDate } from "./utils";
 
