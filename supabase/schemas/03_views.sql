@@ -22,6 +22,25 @@ select
     to_json(cn.*) as contact_note
 from public.contact_notes cn;
 
+-- subscriptions_summary: sessions_used = count of attended bookings on the pack;
+-- sessions_remaining = total_sessions - sessions_used.
+-- Defined before contacts_summary because contacts_summary references it.
+create or replace view public.subscriptions_summary with (security_invoker = on) as
+select
+    s.id,
+    s.created_at,
+    s.contact_id,
+    s.total_sessions,
+    s.purchased_at,
+    s.price,
+    s.notes,
+    s.sales_id,
+    count(b.id) filter (where b.status = 'attended') as sessions_used,
+    s.total_sessions - count(b.id) filter (where b.status = 'attended') as sessions_remaining
+from public.subscriptions s
+left join public.bookings b on b.subscription_id = s.id
+group by s.id;
+
 create or replace view public.contacts_summary with (security_invoker = on) as
 select
     co.id,
@@ -48,24 +67,6 @@ from public.contacts co
     left join public.tasks t on co.id = t.contact_id
     left join public.subscriptions_summary ss on co.id = ss.contact_id
 group by co.id;
-
--- subscriptions_summary: sessions_used = count of attended bookings on the pack;
--- sessions_remaining = total_sessions - sessions_used.
-create or replace view public.subscriptions_summary with (security_invoker = on) as
-select
-    s.id,
-    s.created_at,
-    s.contact_id,
-    s.total_sessions,
-    s.purchased_at,
-    s.price,
-    s.notes,
-    s.sales_id,
-    count(b.id) filter (where b.status = 'attended') as sessions_used,
-    s.total_sessions - count(b.id) filter (where b.status = 'attended') as sessions_remaining
-from public.subscriptions s
-left join public.bookings b on b.subscription_id = s.id
-group by s.id;
 
 -- sessions_summary: nb_booked = live (non-cancelled) booking count;
 -- nb_attended = count of attended bookings.
