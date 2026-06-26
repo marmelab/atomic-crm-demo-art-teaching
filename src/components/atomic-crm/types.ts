@@ -55,7 +55,8 @@ export type PhoneNumberAndType = {
 export type Contact = {
   first_name: string;
   last_name: string;
-  title: string;
+  /** @deprecated B2B field — not used in student-oriented forms, kept nullable for existing data */
+  title?: string;
   email_jsonb: EmailAndType[];
   avatar?: Partial<RAFile>;
   linkedin_url?: string | null;

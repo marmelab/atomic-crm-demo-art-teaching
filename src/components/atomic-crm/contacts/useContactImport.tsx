@@ -7,7 +7,6 @@ export type ContactImportSchema = {
   first_name: string;
   last_name: string;
   gender: string;
-  title: string;
   email_work: string;
   email_home: string;
   email_other: string;
@@ -58,7 +57,6 @@ export function useContactImport() {
             first_name,
             last_name,
             gender,
-            title,
             email_work,
             email_home,
             email_other,
@@ -92,7 +90,6 @@ export function useContactImport() {
                 first_name,
                 last_name,
                 gender,
-                title,
                 email_jsonb,
                 phone_jsonb,
                 background,

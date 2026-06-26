@@ -129,14 +129,11 @@ const ContactItemContent = ({
           <div className="font-medium">
             {`${contact.first_name} ${contact.last_name ?? ""}`}
           </div>
-          {contact.title || contact.nb_tasks ? (
+          {contact.nb_tasks ? (
             <div className="text-sm text-muted-foreground">
-              {contact.title}
-              {contact.nb_tasks
-                ? ` - ${translate("crm.common.task_count", {
-                    smart_count: contact.nb_tasks,
-                  })}`
-                : ""}
+              {translate("crm.common.task_count", {
+                smart_count: contact.nb_tasks,
+              })}
               &nbsp;&nbsp;
               <TagsList />
             </div>
@@ -248,18 +245,13 @@ const ContactItemContentMobile = ({ contact }: { contact: Contact }) => {
             </div>
             <Status status={contact.status} />
           </div>
-          <div className="text-sm text-muted-foreground">
-            <div className="flex flex-col gap-1">
-              <span>{contact.title}</span>
-              {contact.nb_tasks ? (
-                <span>
-                  {translate("crm.common.task_count", {
-                    smart_count: contact.nb_tasks,
-                  })}
-                </span>
-              ) : null}
+          {contact.nb_tasks ? (
+            <div className="text-sm text-muted-foreground">
+              {translate("crm.common.task_count", {
+                smart_count: contact.nb_tasks,
+              })}
             </div>
-          </div>
+          ) : null}
         </div>
       </div>
     </Link>

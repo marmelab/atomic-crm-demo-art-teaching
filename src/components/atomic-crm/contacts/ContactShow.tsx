@@ -100,9 +100,6 @@ const ContactShowContentMobile = () => {
               <h2 className="text-2xl font-bold">
                 <RecordRepresentation />
               </h2>
-              <div className="text-sm text-muted-foreground">
-                {record.title}
-              </div>
             </div>
           </div>
         </div>
@@ -224,9 +221,6 @@ const ContactShowContent = () => {
                 <h5 className="text-xl font-semibold">
                   <RecordRepresentation />
                 </h5>
-                <div className="inline-flex text-sm text-muted-foreground">
-                  {record.title}
-                </div>
               </div>
             </div>
             <InfiniteListBase

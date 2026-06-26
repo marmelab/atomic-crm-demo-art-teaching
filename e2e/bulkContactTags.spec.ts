@@ -37,9 +37,9 @@ test("user adds a tag to several contacts", async ({
   await page.getByRole("button", { name: "Sign in" }).click();
 
   await expect(page).toHaveTitle(/Atomic CRM/);
-  await expect(page.getByRole("link", { name: "Contacts" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Students" })).toBeVisible();
 
-  await menu.goToContacts();
+  await menu.goToStudents();
   await expect(page.getByText("Ada Lovelace")).toBeVisible();
   await expect(page.getByText("Grace Hopper")).toBeVisible();
 
@@ -52,7 +52,7 @@ test("user adds a tag to several contacts", async ({
   await page.getByLabel("Tag name").fill("Prospect");
   await page.getByRole("button", { name: "Save" }).click();
 
-  await dismissToast("Tag added to 2 contacts");
+  await dismissToast("Tag added to 2 students");
 
   await expect(
     page.getByText("Grace Hopper").locator("xpath=ancestor::a[1]"),

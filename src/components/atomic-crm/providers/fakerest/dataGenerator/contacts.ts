@@ -1,11 +1,4 @@
-import {
-  company as fakerCompany,
-  internet,
-  lorem,
-  name,
-  phone,
-  random,
-} from "faker/locale/en_US";
+import { internet, lorem, name, phone, random } from "faker/locale/en_US";
 
 import { defaultNoteStatuses } from "../../../root/defaultConfiguration";
 import { contactGender } from "../../../contacts/contactModel";
@@ -16,7 +9,7 @@ import { randomDate, weightedBoolean } from "./utils";
 const getRandomContactDetailsType = () =>
   random.arrayElement(["Work", "Home", "Other"]) as "Work" | "Home" | "Other";
 
-export const generateContacts = (db: Db, size = 500): Required<Contact>[] => {
+export const generateContacts = (db: Db, size = 500): Contact[] => {
   const nbAvailblePictures = 223;
   let numberOfContacts = 0;
 
@@ -49,7 +42,6 @@ export const generateContacts = (db: Db, size = 500): Required<Contact>[] => {
           ".jpeg"
         : undefined,
     };
-    const title = fakerCompany.bsAdjective();
 
     if (has_avatar) {
       numberOfContacts++;
@@ -64,7 +56,6 @@ export const generateContacts = (db: Db, size = 500): Required<Contact>[] => {
       first_name,
       last_name,
       gender,
-      title: title.charAt(0).toUpperCase() + title.substr(1),
       email_jsonb,
       phone_jsonb,
       background: lorem.sentence(),
