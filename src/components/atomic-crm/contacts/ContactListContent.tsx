@@ -129,12 +129,16 @@ const ContactItemContent = ({
           <div className="font-medium">
             {`${contact.first_name} ${contact.last_name ?? ""}`}
           </div>
-          {contact.nb_tasks ? (
+          {contact.nb_tasks || contact.tags?.length ? (
             <div className="text-sm text-muted-foreground">
-              {translate("crm.common.task_count", {
-                smart_count: contact.nb_tasks,
-              })}
-              &nbsp;&nbsp;
+              {contact.nb_tasks
+                ? translate("crm.common.task_count", {
+                    smart_count: contact.nb_tasks,
+                  })
+                : null}
+              {contact.nb_tasks && contact.tags?.length ? (
+                <>&nbsp;&nbsp;</>
+              ) : null}
               <TagsList />
             </div>
           ) : null}
