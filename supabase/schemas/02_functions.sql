@@ -159,27 +159,6 @@ BEGIN
 END;
 $_$;
 
-CREATE OR REPLACE FUNCTION "public"."handle_company_saved"() RETURNS "trigger"
-    LANGUAGE "plpgsql"
-    SET "search_path" TO 'public'
-    AS $$
-declare company_logo text;
-
-begin
-    if new.logo is not null then
-        return new;
-    end if;
-
-    company_logo = get_domain_favicon(new.website);
-    if company_logo is null then
-        return new;
-    end if;
-
-    new.logo = concat('{"src":"', company_logo, '","title":"Company favicon"}');
-    return new;
-end;
-$$;
-
 CREATE OR REPLACE FUNCTION "public"."handle_contact_note_created_or_updated"() RETURNS "trigger"
     LANGUAGE "plpgsql" SECURITY DEFINER
     SET "search_path" TO ''
@@ -280,7 +259,6 @@ CREATE OR REPLACE FUNCTION "public"."merge_contacts"("loser_id" bigint, "winner_
 DECLARE
   winner_contact contacts%ROWTYPE;
   loser_contact contacts%ROWTYPE;
-  deal_record RECORD;
   merged_emails jsonb;
   merged_phones jsonb;
   merged_tags bigint[];
@@ -305,24 +283,7 @@ BEGIN
   -- 2. Reassign contact notes from loser to winner
   UPDATE contact_notes SET contact_id = winner_id WHERE contact_id = loser_id;
 
-  -- 3. Update deals - replace loser with winner in contact_ids array
-  FOR deal_record IN
-    SELECT id, contact_ids
-    FROM deals
-    WHERE contact_ids @> ARRAY[loser_id]
-  LOOP
-    UPDATE deals
-    SET contact_ids = (
-      SELECT ARRAY(
-        SELECT DISTINCT unnest(
-          array_remove(deal_record.contact_ids, loser_id) || ARRAY[winner_id]
-        )
-      )
-    )
-    WHERE id = deal_record.id;
-  END LOOP;
-
-  -- 4. Merge contact data
+  -- 3. Merge contact data
 
   -- Get email arrays
   winner_emails := COALESCE(winner_contact.email_jsonb, '[]'::jsonb);
@@ -399,14 +360,13 @@ BEGIN
     )
   );
 
-  -- 5. Update winner with merged data
+  -- 4. Update winner with merged data
   UPDATE contacts SET
     avatar = COALESCE(winner_contact.avatar, loser_contact.avatar),
     gender = COALESCE(winner_contact.gender, loser_contact.gender),
     first_name = COALESCE(winner_contact.first_name, loser_contact.first_name),
     last_name = COALESCE(winner_contact.last_name, loser_contact.last_name),
     title = COALESCE(winner_contact.title, loser_contact.title),
-    company_id = COALESCE(winner_contact.company_id, loser_contact.company_id),
     email_jsonb = merged_emails,
     phone_jsonb = merged_phones,
     linkedin_url = COALESCE(winner_contact.linkedin_url, loser_contact.linkedin_url),
@@ -418,7 +378,7 @@ BEGIN
     tags = merged_tags
   WHERE id = winner_id;
 
-  -- 6. Delete loser contact
+  -- 5. Delete loser contact
   DELETE FROM contacts WHERE id = loser_id;
 
   RETURN winner_id;
