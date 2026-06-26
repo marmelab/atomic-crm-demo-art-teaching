@@ -278,6 +278,33 @@ export const englishCrmMessages = {
         description: "It seems there are no subscriptions yet.",
       },
     },
+    sessions: {
+      name: "Session |||| Sessions",
+      forcedCaseName: "Session",
+      fields: {
+        starts_at: "Start date & time",
+        duration_minutes: "Duration (minutes)",
+        capacity: "Capacity",
+        overbooking: "Overbooking",
+        notes: "Notes",
+        bookings: "Bookings",
+        sales_id: "Account manager",
+        created_at: "Created at",
+      },
+      action: {
+        new: "New session",
+        create: "Create session",
+        edit: "Edit session",
+      },
+      empty: {
+        title: "No sessions found",
+        description: "It seems there are no upcoming sessions.",
+      },
+      roster: {
+        title: "Roster",
+        placeholder: "Student roster will appear here once bookings are added.",
+      },
+    },
   },
   crm: {
     action: {

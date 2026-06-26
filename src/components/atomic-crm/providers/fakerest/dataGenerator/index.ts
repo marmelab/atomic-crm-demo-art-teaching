@@ -2,6 +2,7 @@ import { generateContactNotes } from "./contactNotes";
 import { generateContacts } from "./contacts";
 import { finalize } from "./finalize";
 import { generateSales } from "./sales";
+import { generateSessions, toSessionsSummary } from "./sessions";
 import { generateSubscriptions, toSubscriptionsSummary } from "./subscriptions";
 import { generateTags } from "./tags";
 import { generateTasks } from "./tasks";
@@ -16,6 +17,8 @@ export default (): Db => {
   db.tasks = generateTasks(db);
   db.subscriptions = generateSubscriptions(db);
   db.subscriptions_summary = toSubscriptionsSummary(db.subscriptions);
+  db.sessions = generateSessions(db);
+  db.sessions_summary = toSessionsSummary(db.sessions);
   db.configuration = [
     {
       id: 1,

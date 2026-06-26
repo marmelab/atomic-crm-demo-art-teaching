@@ -111,6 +111,23 @@ export type SubscriptionSummary = Subscription & {
   sessions_remaining: number;
 };
 
+export type Session = {
+  created_at: string;
+  starts_at: string;
+  duration_minutes: number;
+  capacity: number;
+  overbooking: number;
+  notes?: string | null;
+  sales_id?: Identifier;
+} & Pick<RaRecord, "id">;
+
+export type SessionSummary = Session & {
+  /** Count of bookings with status != 'cancelled'. Always 0 until TASK-005 ships. */
+  nb_booked: number;
+  /** Count of bookings with status = 'attended'. Always 0 until TASK-005 ships. */
+  nb_attended: number;
+};
+
 export type ActivityContactCreated = {
   type: typeof CONTACT_CREATED;
   sales_id?: Identifier;

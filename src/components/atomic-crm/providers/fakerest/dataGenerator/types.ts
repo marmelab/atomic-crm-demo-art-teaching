@@ -2,6 +2,8 @@ import type {
   Contact,
   ContactNote,
   Sale,
+  Session,
+  SessionSummary,
   Subscription,
   SubscriptionSummary,
   Tag,
@@ -17,5 +19,7 @@ export interface Db {
   tasks: Task[];
   subscriptions: Subscription[];
   subscriptions_summary: SubscriptionSummary[];
+  sessions: Session[];
+  sessions_summary: SessionSummary[];
   configuration: Array<{ id: number; config: ConfigurationContextValue }>;
 }

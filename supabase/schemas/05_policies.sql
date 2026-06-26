@@ -53,3 +53,10 @@ create policy "Enable read access for authenticated users" on public.subscriptio
 create policy "Enable insert for authenticated users only" on public.subscriptions for insert to authenticated with check (true);
 create policy "Enable update for authenticated users only" on public.subscriptions for update to authenticated using (true) with check (true);
 create policy "Subscription Delete Policy" on public.subscriptions for delete to authenticated using (true);
+
+-- Sessions
+alter table public.sessions enable row level security;
+create policy "Enable read access for authenticated users" on public.sessions for select to authenticated using (true);
+create policy "Enable insert for authenticated users only" on public.sessions for insert to authenticated with check (true);
+create policy "Enable update for authenticated users only" on public.sessions for update to authenticated using (true) with check (true);
+create policy "Session Delete Policy" on public.sessions for delete to authenticated using (true);

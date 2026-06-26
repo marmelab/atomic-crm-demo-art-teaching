@@ -38,6 +38,9 @@ const getDataProviderWithCustomMethods = () => {
       if (resource === "subscriptions") {
         return baseDataProvider.getList("subscriptions_summary", params);
       }
+      if (resource === "sessions") {
+        return baseDataProvider.getList("sessions_summary", params);
+      }
       if (resource === "activity_log") {
         const { data, total } = await baseDataProvider.getList(
           "activity_log",
@@ -62,6 +65,9 @@ const getDataProviderWithCustomMethods = () => {
       }
       if (resource === "subscriptions") {
         return baseDataProvider.getOne("subscriptions_summary", params);
+      }
+      if (resource === "sessions") {
+        return baseDataProvider.getOne("sessions_summary", params);
       }
 
       return baseDataProvider.getOne(resource, params);

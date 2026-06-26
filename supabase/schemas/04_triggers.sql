@@ -20,6 +20,10 @@ create or replace trigger set_subscription_sales_id_trigger
     before insert on public.subscriptions
     for each row execute function public.set_sales_id_default();
 
+create or replace trigger set_session_sales_id_trigger
+    before insert on public.sessions
+    for each row execute function public.set_sales_id_default();
+
 -- Lowercase contact emails before insert or update (must run before contact_saved)
 create or replace trigger "10_lowercase_contact_emails"
     before insert or update on public.contacts

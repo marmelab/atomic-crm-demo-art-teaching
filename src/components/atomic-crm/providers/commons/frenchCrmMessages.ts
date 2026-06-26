@@ -283,6 +283,34 @@ export const frenchCrmMessages = {
         description: "Il semble qu'il n'y ait pas encore d'abonnements.",
       },
     },
+    sessions: {
+      name: "Séance |||| Séances",
+      forcedCaseName: "Séance",
+      fields: {
+        starts_at: "Date et heure de début",
+        duration_minutes: "Durée (minutes)",
+        capacity: "Capacité",
+        overbooking: "Surbooking",
+        notes: "Notes",
+        bookings: "Réservations",
+        sales_id: "Responsable de compte",
+        created_at: "Créé le",
+      },
+      action: {
+        new: "Nouvelle séance",
+        create: "Créer une séance",
+        edit: "Modifier la séance",
+      },
+      empty: {
+        title: "Aucune séance trouvée",
+        description: "Il semble qu'il n'y ait pas encore de séances à venir.",
+      },
+      roster: {
+        title: "Liste des participants",
+        placeholder:
+          "La liste des participants apparaîtra ici une fois les réservations ajoutées.",
+      },
+    },
   },
   crm: {
     action: {
