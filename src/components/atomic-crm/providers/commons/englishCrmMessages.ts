@@ -1,20 +1,18 @@
 export const englishCrmMessages = {
   resources: {
     contacts: {
-      name: "Contact |||| Contacts",
-      forcedCaseName: "Contact",
+      name: "Student |||| Students",
+      forcedCaseName: "Student",
       field_categories: {
         background_info: "Background info",
         identity: "Identity",
         misc: "Misc",
         personal_info: "Personal info",
-        position: "Position",
       },
       fields: {
         first_name: "First name",
         last_name: "Last name",
         last_seen: "Last seen",
-        title: "Title",
         email_jsonb: "Email addresses",
         email: "Email",
         phone_jsonb: "Phone numbers",
@@ -25,13 +23,13 @@ export const englishCrmMessages = {
         sales_id: "Account manager",
       },
       action: {
-        add: "Add contact",
-        add_first: "Add your first contact",
-        create: "Create contact",
-        edit: "Edit contact",
+        add: "Add student",
+        add_first: "Add your first student",
+        create: "Create student",
+        edit: "Edit student",
         export_vcard: "Export to vCard",
-        new: "New Contact",
-        show: "Show contact",
+        new: "New Student",
+        show: "Show student",
       },
       background: {
         last_activity_on: "Last activity on %{date}",
@@ -41,16 +39,16 @@ export const englishCrmMessages = {
         status_none: "None",
       },
       empty: {
-        description: "It seems your contact list is empty.",
-        title: "No contacts found",
+        description: "It seems your student list is empty.",
+        title: "No students found",
       },
       import: {
-        title: "Import contacts",
+        title: "Import students",
         button: "Import CSV",
         complete:
-          "Contacts import complete. Imported %{importCount} contacts, with %{errorCount} errors",
+          "Students import complete. Imported %{importCount} students, with %{errorCount} errors",
         progress:
-          "Imported %{importCount} / %{rowCount} contacts, with %{errorCount} errors.",
+          "Imported %{importCount} / %{rowCount} students, with %{errorCount} errors.",
         error:
           "Failed to import this file, please make sure your provided a valid CSV file.",
         imported: "Imported",
@@ -60,7 +58,7 @@ export const englishCrmMessages = {
         sample_hint: "Here is a sample CSV file you can use as a template",
         stop: "Stop import",
         csv_file: "CSV File",
-        contacts_label: "contact |||| contacts",
+        contacts_label: "student |||| students",
       },
       inputs: {
         genders: {
@@ -75,36 +73,36 @@ export const englishCrmMessages = {
         },
       },
       list: {
-        error_loading: "Error loading contacts",
+        error_loading: "Error loading students",
       },
       bulk_tag: {
         action: "Tag",
         back: "Back to tags",
         create_description:
-          "Create a new tag and apply it to the selected contacts.",
+          "Create a new tag and apply it to the selected students.",
         description:
-          "Choose an existing tag or create a new one for the selected contacts.",
-        empty: "No tags yet. Create one to tag the selected contacts.",
-        error: "Failed to add tag to contacts",
-        noop: "Selected contacts already have this tag",
+          "Choose an existing tag or create a new one for the selected students.",
+        empty: "No tags yet. Create one to tag the selected students.",
+        error: "Failed to add tag to students",
+        noop: "Selected students already have this tag",
         success:
-          "Tag added to %{smart_count} contact |||| Tag added to %{smart_count} contacts",
-        title: "Add tag to contacts",
+          "Tag added to %{smart_count} student |||| Tag added to %{smart_count} students",
+        title: "Add tag to students",
       },
       merge: {
-        action: "Merge with another contact",
-        confirm: "Merge Contacts",
-        current_contact: "Current Contact (will be deleted)",
-        description: "Merge this contact with another one.",
-        error: "Failed to merge contacts",
+        action: "Merge with another student",
+        confirm: "Merge Students",
+        current_contact: "Current Student (will be deleted)",
+        description: "Merge this student with another one.",
+        error: "Failed to merge students",
         merging: "Merging...",
         no_additional_data: "No additional data to merge",
-        select_target: "Please select a contact to merge with",
-        success: "Contacts merged successfully",
-        target_contact: "Target Contact (will be kept)",
-        title: "Merge Contact",
+        select_target: "Please select a student to merge with",
+        success: "Students merged successfully",
+        target_contact: "Target Student (will be kept)",
+        title: "Merge Student",
         warning_description:
-          "All data will be transferred to the second contact. This action cannot be undone.",
+          "All data will be transferred to the second student. This action cannot be undone.",
         warning_title: "Warning: Destructive Operation",
         what_will_be_merged: "What will be merged:",
       },
@@ -121,9 +119,9 @@ export const englishCrmMessages = {
       },
       hot: {
         empty_change_status:
-          'Change the status of a contact by adding a note to that contact and clicking on "show options".',
-        empty_hint: 'Contacts with a "hot" status will appear here.',
-        title: "Hot Contacts",
+          'Change the status of a student by adding a note to that student and clicking on "show options".',
+        empty_hint: 'Students with a "hot" status will appear here.',
+        title: "Hot Students",
       },
     },
     notes: {

@@ -172,8 +172,8 @@ const getMenuMethod = ({ page }: { page: Page; isMobile: boolean }) => ({
     await page.getByRole("link", { name: "Dashboard" }).click();
     await page.waitForLoadState("networkidle");
   },
-  goToContacts: async () => {
-    await page.getByRole("link", { name: "Contacts" }).click();
+  goToStudents: async () => {
+    await page.getByRole("link", { name: "Students" }).click();
     await page.waitForLoadState("networkidle");
   },
 });
