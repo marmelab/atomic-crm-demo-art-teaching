@@ -73,7 +73,7 @@ export const englishCrmMessages = {
         },
       },
       list: {
-        error_loading: "Error loading contacts",
+        error_loading: "Error loading students",
       },
       bulk_tag: {
         action: "Tag",

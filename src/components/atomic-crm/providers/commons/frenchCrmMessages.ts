@@ -76,7 +76,7 @@ export const frenchCrmMessages = {
         },
       },
       list: {
-        error_loading: "Erreur lors du chargement des contacts",
+        error_loading: "Erreur lors du chargement des élèves",
       },
       bulk_tag: {
         action: "Étiqueter",
