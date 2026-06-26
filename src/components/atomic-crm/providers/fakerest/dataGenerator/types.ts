@@ -2,6 +2,7 @@ import type {
   Booking,
   Contact,
   ContactNote,
+  MonthlyAttendance,
   Sale,
   Session,
   SessionSummary,
@@ -23,5 +24,6 @@ export interface Db {
   sessions: Session[];
   sessions_summary: SessionSummary[];
   bookings: Booking[];
+  monthly_attendance: MonthlyAttendance[];
   configuration: Array<{ id: number; config: ConfigurationContextValue }>;
 }

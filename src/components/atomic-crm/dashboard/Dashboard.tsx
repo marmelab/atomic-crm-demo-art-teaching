@@ -4,6 +4,7 @@ import type { Contact, ContactNote } from "../types";
 import { DashboardActivityLog } from "./DashboardActivityLog";
 import { DashboardStepper } from "./DashboardStepper";
 import { HotContacts } from "./HotContacts";
+import { MonthlyRecap } from "./MonthlyRecap";
 import { TasksList } from "./TasksList";
 import { Welcome } from "./Welcome";
 
@@ -46,6 +47,7 @@ export const Dashboard = () => {
       <div className="md:col-span-6">
         <div className="flex flex-col gap-6">
           <DashboardActivityLog />
+          <MonthlyRecap />
         </div>
       </div>
 

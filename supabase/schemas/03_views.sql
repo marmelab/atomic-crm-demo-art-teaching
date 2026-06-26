@@ -42,9 +42,11 @@ select
     co.phone_jsonb,
     (jsonb_path_query_array(co.email_jsonb, '$[*]."email"'))::text as email_fts,
     (jsonb_path_query_array(co.phone_jsonb, '$[*]."number"'))::text as phone_fts,
-    count(distinct t.id) filter (where t.done_date is null) as nb_tasks
+    count(distinct t.id) filter (where t.done_date is null) as nb_tasks,
+    coalesce(sum(ss.sessions_remaining), 0) as total_sessions_remaining
 from public.contacts co
     left join public.tasks t on co.id = t.contact_id
+    left join public.subscriptions_summary ss on co.id = ss.contact_id
 group by co.id;
 
 -- subscriptions_summary: sessions_used = count of attended bookings on the pack;
@@ -82,6 +84,22 @@ select
 from public.sessions s
 left join public.bookings b on b.session_id = s.id
 group by s.id;
+
+-- monthly_attendance: one row per (contact, calendar month), counting attended bookings.
+-- id is a synthetic string: contact_id || '-' || 'YYYY-MM'.
+create or replace view public.monthly_attendance with (security_invoker = on) as
+select
+    (co.id::text || '-' || to_char(date_trunc('month', s.starts_at), 'YYYY-MM')) as id,
+    co.id as contact_id,
+    co.first_name,
+    co.last_name,
+    date_trunc('month', s.starts_at)::date as month,
+    count(b.id) as sessions_attended
+from public.bookings b
+join public.sessions s on s.id = b.session_id
+join public.contacts co on co.id = b.contact_id
+where b.status = 'attended'
+group by co.id, co.first_name, co.last_name, date_trunc('month', s.starts_at);
 
 create or replace view public.init_state with (security_invoker = off) as
 select count(sub.id) as is_initialized

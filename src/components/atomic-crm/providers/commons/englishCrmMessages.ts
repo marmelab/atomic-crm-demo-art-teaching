@@ -406,6 +406,14 @@ export const englishCrmMessages = {
         whats_next: "What's next?",
       },
       upcoming_tasks: "Upcoming Tasks",
+      monthly_recap: {
+        title: "Monthly Recap",
+        column_student: "Student",
+        column_sessions_attended: "Sessions attended",
+        column_prepaid_remaining: "Prepaid remaining",
+        month_picker_label: "Month",
+        empty: "No attendance data for this month.",
+      },
     },
     header: {
       import_data: "Import data",
