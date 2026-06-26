@@ -62,10 +62,7 @@ const BookingRow = ({ booking }: BookingRowProps) => {
 
   const isCancelled = booking.status === "cancelled";
 
-  const updateStatus = (
-    status: BookingStatus,
-    extra?: Partial<Booking>,
-  ) => {
+  const updateStatus = (status: BookingStatus, extra?: Partial<Booking>) => {
     update(
       "bookings",
       {
@@ -92,8 +89,7 @@ const BookingRow = ({ booking }: BookingRowProps) => {
   const handleAttended = () => updateStatus("attended");
   const handleNoShow = () => updateStatus("no_show");
 
-  const statusStyle =
-    STATUS_STYLES[booking.status] ?? STATUS_STYLES["booked"];
+  const statusStyle = STATUS_STYLES[booking.status] ?? STATUS_STYLES["booked"];
 
   return (
     <div
@@ -191,9 +187,7 @@ const SessionRoster = ({
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <div className="flex items-center gap-3">
-          <CardTitle>
-            {translate("resources.sessions.roster.title")}
-          </CardTitle>
+          <CardTitle>{translate("resources.sessions.roster.title")}</CardTitle>
           <CapacityBadge
             nbBooked={nbBooked}
             capacity={capacity}

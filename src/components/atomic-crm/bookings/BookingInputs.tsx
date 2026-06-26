@@ -18,10 +18,7 @@ interface BookingInputsProps {
  * Renders a ReferenceInput for the contact, a SelectInput for the booking type,
  * and a conditional ReferenceInput for the subscription (only when type === 'subscription').
  */
-export const BookingInputs = ({
-  sessionId,
-  contactId,
-}: BookingInputsProps) => {
+export const BookingInputs = ({ sessionId, contactId }: BookingInputsProps) => {
   const { bookingTypes } = useConfigurationContext();
   const type = useWatch({ name: "type" });
   // When contactId is fixed (e.g. from SessionShow) use it for subscription filter

@@ -25,7 +25,10 @@ export const BookingHistoryList = ({ bookings }: BookingHistoryListProps) => {
   return (
     <div className="space-y-1" data-testid="booking-history-list">
       {bookings.map((booking) => (
-        <div key={booking.id} className="flex items-center justify-between py-1">
+        <div
+          key={booking.id}
+          className="flex items-center justify-between py-1"
+        >
           <span className="text-xs text-muted-foreground truncate flex-1">
             {translate("resources.bookings.fields.session_id")}:{" "}
             {String(booking.session_id)}

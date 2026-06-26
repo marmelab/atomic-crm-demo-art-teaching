@@ -76,10 +76,7 @@ export const ContactAside = ({ link = "edit" }: { link?: "edit" | "show" }) => {
         <ContactSubscriptionsPanel contactId={record.id} />
       </AsideSection>
 
-      <AsideSection
-        title={translate("resources.bookings.panel.history")}
-        noGap
-      >
+      <AsideSection title={translate("resources.bookings.panel.history")} noGap>
         <ContactBookingsPanel contactId={record.id} />
       </AsideSection>
 
