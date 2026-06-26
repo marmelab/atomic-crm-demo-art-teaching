@@ -50,7 +50,7 @@ export const toMonthlyAttendance = (db: Db): MonthlyAttendance[] => {
         contact_id: contact.id as number,
         first_name: contact.first_name,
         last_name: contact.last_name,
-        month: monthStart.toISOString().split("T")[0],
+        month: `${monthStart.getFullYear()}-${String(monthStart.getMonth() + 1).padStart(2, "0")}-01`,
         sessions_attended: 1,
       });
     }
