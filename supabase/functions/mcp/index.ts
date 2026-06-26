@@ -275,7 +275,7 @@ function createMcpServer(authInfo: AuthInfo): McpServer {
     {
       title: "Get Database Schema",
       description:
-        "Retrieve the database schema for the user's Atomic CRM instance including all tables, views, columns, types, and foreign key relationships. Views (like contacts_summary, companies_summary) are read-only and provide pre-joined/aggregated data. Use them for search and list queries.",
+        "Retrieve the database schema for the user's Atomic CRM instance including all tables, views, columns, types, and foreign key relationships. Views (like contacts_summary) are read-only and provide pre-joined/aggregated data. Use them for search and list queries.",
       annotations: { readOnlyHint: true },
     },
     async () => {
@@ -293,15 +293,14 @@ function createMcpServer(authInfo: AuthInfo): McpServer {
 IMPORTANT: Before using this tool, you MUST call the get_schema tool first to understand what tables and columns are available in the database.
 
 Use this tool when the user asks about their CRM data such as:
-- Contacts, companies, and deals
-- Sales pipeline and forecasting data
+- Contacts and sales
 - Customer interactions and notes
 - Tasks and follow-ups
 - Custom fields and metadata
 
 Row Level Security (RLS) is enforced - queries automatically return only data the authenticated user has permission to access.
 
-Use the *_summary views (contacts_summary, companies_summary) for queries that need aggregated data or search capabilities.
+Use the *_summary views (contacts_summary) for queries that need aggregated data or search capabilities.
 
 To filter by the current user, if the table has a sales_id column, add a WHERE sales_id = auth.uid() clause to your query.
 
@@ -309,9 +308,8 @@ This tool only supports SELECT queries. For INSERT, UPDATE, or DELETE operations
 
 Examples:
 - "SELECT id, first_name, last_name, email_fts FROM contacts_summary WHERE email_fts LIKE '%@company.com%'"
-- "SELECT name, stage, amount FROM deals WHERE created_at > NOW() - INTERVAL '30 days' ORDER BY amount DESC"
 - "SELECT COUNT(*) as total_tasks, type FROM tasks WHERE done_date IS NULL GROUP BY type"
-- "SELECT c.first_name, c.last_name, co.name as company_name FROM contacts c JOIN companies co ON c.company_id = co.id WHERE co.sector = 'Technology'"`,
+- "SELECT first_name, last_name, status FROM contacts ORDER BY last_seen DESC LIMIT 10"`,
       inputSchema: z.object({
         sql: z.string().describe("The SQL SELECT query to execute"),
       }),
@@ -351,7 +349,7 @@ Examples:
 IMPORTANT: Before using this tool, you MUST call the get_schema tool first to understand what tables and columns are available in the database.
 
 Use this tool for data modifications such as:
-- Creating new contacts, companies, deals, tasks, or notes
+- Creating new contacts, tasks, or notes
 - Updating existing records
 - Deleting records
 
@@ -362,8 +360,8 @@ IMPORTANT: Never specify sales_id in INSERT or UPDATE statements — it is autom
 For read-only queries, use the query tool instead.
 
 Examples:
-- "INSERT INTO contacts (first_name, last_name, email) VALUES ('John', 'Doe', 'john@example.com')"
-- "UPDATE deals SET stage = 'won-deal' WHERE id = 123"
+- "INSERT INTO contacts (first_name, last_name, email_jsonb) VALUES ('John', 'Doe', '[{\"email\": \"john@example.com\", \"type\": \"Work\"}]')"
+- "UPDATE contacts SET status = 'cold' WHERE id = 123"
 - "DELETE FROM tasks WHERE id = 456"`,
       inputSchema: z.object({
         sql: z
