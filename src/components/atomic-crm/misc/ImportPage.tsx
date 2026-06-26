@@ -204,7 +204,6 @@ const ImportFromJsonSuccess = ({
 const hasFailedImports = (failedImports: ImportFromJsonFailures) => {
   return (
     failedImports.sales.length > 0 ||
-    failedImports.companies.length > 0 ||
     failedImports.contacts.length > 0 ||
     failedImports.notes.length > 0 ||
     failedImports.tasks.length > 0
@@ -248,11 +247,6 @@ const ImportStats = ({
       entity: "sales",
       imported: stats.sales,
       failed: failedImports.sales.length,
-    },
-    {
-      entity: "companies",
-      imported: stats.companies,
-      failed: failedImports.companies.length,
     },
     {
       entity: "contacts",

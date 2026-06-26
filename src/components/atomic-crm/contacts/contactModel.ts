@@ -1,6 +1,8 @@
 import { Mars, NonBinary, Venus } from "lucide-react";
 
-import type { Company, Contact, ContactGender } from "../types";
+import type { Contact, ContactGender } from "../types";
+
+type CompanyLike = { name?: string };
 
 export const defaultEmailJsonb = [{ email: null, type: null }];
 export const defaultPhoneJsonb = [{ number: null, type: null }];
@@ -105,11 +107,11 @@ function foldLine(line: string): string {
 }
 
 /**
- * Converts a contact and their company to vCard 3.0 format
+ * Converts a contact and their optional company to vCard 3.0 format
  */
 export function exportToVCard(
   contact: Contact,
-  company?: Company,
+  company?: CompanyLike,
   photoData?: { base64: string; mimeType: string },
 ): string {
   const lines: string[] = [];
