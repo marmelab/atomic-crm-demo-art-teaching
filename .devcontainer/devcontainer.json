@@ -1,0 +1,33 @@
+// See https://containers.dev/implementors/json_reference/ for configuration reference
+{
+  "name": "Atomic CRM (Art Teaching)",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "workspaceFolder": "/workspaces/atomic-crm",
+  "workspaceMount": "source=${localWorkspaceFolder},target=${containerWorkspaceFolder},type=bind,consistency=cached",
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  "remoteUser": "node",
+  "features": {
+    "./claude-code": {},
+    "./npm": {
+      "workspaceFolder": "${containerWorkspaceFolder}"
+    },
+    "./playwright": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:3": {
+      "moby": false
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": []
+    }
+  },
+  "mounts": [
+    {
+      "type": "volume",
+      "source": "${devcontainerId}-tmp",
+      "target": "/tmp"
+    }
+  ]
+}
