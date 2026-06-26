@@ -168,7 +168,7 @@ alter table public.bookings
     add constraint bookings_sales_id_fkey foreign key (sales_id) references public.sales(id);
 
 -- Partial unique index: one active booking per (session, contact); re-booking after cancel is allowed
-create unique index uq__bookings__session_contact__active
+create unique index bookings_active_session_contact_idx
     on public.bookings (session_id, contact_id)
     where (status <> 'cancelled');
 

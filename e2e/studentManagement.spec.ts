@@ -8,7 +8,7 @@ test.describe("Students resource", () => {
     // Create the first user (admin)
     await createUser({ email: "teacher@school.example", password: "password" });
 
-    await page.goto("http://localhost:5175/");
+    await page.goto("/");
     await expect(page).toHaveTitle(/Atomic CRM/);
 
     // Log in
@@ -18,7 +18,6 @@ test.describe("Students resource", () => {
 
     // Navigate to Students via the nav link
     await page.getByRole("link", { name: "Students" }).click();
-    await page.waitForLoadState("networkidle");
 
     // The list should say Students (resource relabel)
     await expect(
@@ -27,7 +26,6 @@ test.describe("Students resource", () => {
 
     // Create a new student
     await page.getByRole("button", { name: "New Student" }).click();
-    await page.waitForLoadState("networkidle");
 
     // Fill in the trimmed form — no Title/Position section
     await page.getByLabel("She/Her").click();
@@ -55,11 +53,12 @@ test.describe("Students resource", () => {
     await expect(page.getByText("Element created")).toBeVisible();
 
     // Show page should display the student name
-    await expect(page.locator("h5, h2").filter({ hasText: "Alice Dupont" })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Alice Dupont" }),
+    ).toBeVisible();
 
     // Navigate back to list and confirm student appears
     await page.getByRole("link", { name: "Students" }).click();
-    await page.waitForLoadState("networkidle");
 
     await expect(page.getByText("Alice Dupont")).toBeVisible();
   });

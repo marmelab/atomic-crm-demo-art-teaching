@@ -61,15 +61,14 @@ export const MonthlyRecap = () => {
   // up their prepaid balance.
   const contactIds = attendanceRows.map((r) => r.contact_id);
 
+  // Only runs when there are attendance rows (see `enabled` below), so the
+  // id list is always non-empty here.
   const { data: contacts = [] } = useGetList<Contact>(
     "contacts",
     {
       pagination: { page: 1, perPage: 500 },
       sort: { field: "id", order: "ASC" },
-      filter:
-        contactIds.length > 0
-          ? { "id@in": `(${contactIds.join(",")})` }
-          : { id: -1 }, // yields empty result when no attendance rows
+      filter: { "id@in": `(${contactIds.join(",")})` },
     },
     { enabled: contactIds.length > 0 },
   );

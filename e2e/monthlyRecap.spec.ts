@@ -25,7 +25,8 @@ test.describe("Monthly Recap dashboard widget", () => {
       sales_id: teacher.id,
     });
 
-    // Create a session in the current month
+    // Create a session mid-month so the date is unambiguously in the current
+    // month for both local-time and UTC month truncation.
     const now = new Date();
     const sessionStartsAt = new Date(
       now.getFullYear(),
@@ -68,15 +69,13 @@ test.describe("Monthly Recap dashboard widget", () => {
     }
 
     // Log in as teacher
-    await page.goto("http://localhost:5175/");
+    await page.goto("/");
     await page.getByLabel("Email").fill("teacher-recap@school.example");
     await page.getByLabel("Password").fill("password");
     await page.getByRole("button", { name: "Sign in" }).click();
-    await page.waitForLoadState("networkidle");
 
     // Navigate to Dashboard
     await page.getByRole("link", { name: "Dashboard" }).click();
-    await page.waitForLoadState("networkidle");
 
     // The Monthly Recap widget must be visible
     await expect(
@@ -91,15 +90,10 @@ test.describe("Monthly Recap dashboard widget", () => {
     // The student's row must appear with sessions_attended = 1
     await expect(page.getByText(/Recap Student/i)).toBeVisible();
     await expect(page.getByTestId("monthly-recap-row").first()).toBeVisible();
-    await expect(
-      page.getByTestId("sessions-attended").first(),
-    ).toHaveText("1");
+    await expect(page.getByTestId("sessions-attended").first()).toHaveText("1");
 
-    // Clean up sessions (not covered by resetDb which only resets the TABLES list)
-    await adminSupabase
-      .from("sessions")
-      .delete()
-      .eq("id", session.id);
+    // No manual cleanup needed: resetDb (auto fixture) clears sessions,
+    // bookings and subscriptions before each test.
   });
 
   test("recap shows empty state when no attended sessions in selected month", async ({
@@ -112,15 +106,13 @@ test.describe("Monthly Recap dashboard widget", () => {
       password: "password",
     });
 
-    await page.goto("http://localhost:5175/");
+    await page.goto("/");
     await page.getByLabel("Email").fill("teacher-empty@school.example");
     await page.getByLabel("Password").fill("password");
     await page.getByRole("button", { name: "Sign in" }).click();
-    await page.waitForLoadState("networkidle");
 
     // Navigate to Dashboard
     await page.getByRole("link", { name: "Dashboard" }).click();
-    await page.waitForLoadState("networkidle");
 
     // Widget renders
     await expect(

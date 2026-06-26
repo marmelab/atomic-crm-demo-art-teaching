@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { type Page } from "@playwright/test";
 import { test, expect } from "./fixtures";
 
 const adminSupabase = createClient(
@@ -32,6 +33,18 @@ const yearMonthFor = (daysFromNow: number): string => {
   return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}`;
 };
 
+/**
+ * Returns a promise that resolves when a booking write (POST/PATCH on the
+ * /bookings endpoint) completes. Set it up *before* the action that triggers
+ * the write, then await it, so cross-page navigation never races an
+ * uncommitted optimistic update.
+ */
+const bookingWrite = (page: Page, method: "POST" | "PATCH") =>
+  page.waitForResponse(
+    (resp) =>
+      resp.url().includes("/bookings") && resp.request().method() === method,
+  );
+
 test.describe("Booking lifecycle", () => {
   test("full teacher lifecycle: book → attend → monthly recap + prepaid decrement → cancel → re-book", async ({
     page,
@@ -53,7 +66,9 @@ test.describe("Booking lifecycle", () => {
       sales_id: teacher.id,
     });
 
-    const student2 = await createContact({
+    // Second student is referenced in the UI by name ("Cancel"), so we only
+    // need the contact to exist — no need to keep the returned record.
+    await createContact({
       first_name: "Cancel",
       last_name: "Student",
       sales_id: teacher.id,
@@ -76,19 +91,16 @@ test.describe("Booking lifecycle", () => {
     });
 
     // Log in
-    await page.goto("http://localhost:5175/");
+    await page.goto("/");
     await page.getByLabel("Email").fill("lifecycle-teacher@school.example");
     await page.getByLabel("Password").fill("password");
     await page.getByRole("button", { name: "Sign in" }).click();
-    await page.waitForLoadState("networkidle");
 
     // === Step 1: Navigate to the session show page via the Sessions list ===
     await page.getByRole("link", { name: "Sessions" }).click();
-    await page.waitForLoadState("networkidle");
 
     // Click the capacity badge of the first (and only) session row to open ShowPage
     await page.getByTestId("capacity-badge").first().click();
-    await page.waitForLoadState("networkidle");
 
     // === Step 2: Book student2 first (we will cancel it later) ===
     await page.getByTestId("add-student-button").click();
@@ -104,8 +116,9 @@ test.describe("Booking lifecycle", () => {
     await typeSelect.click();
     await page.getByRole("option", { name: "Single" }).click();
 
+    let bookingCreated = bookingWrite(page, "POST");
     await dialog.getByRole("button", { name: "Save" }).click();
-    await page.waitForLoadState("networkidle");
+    await bookingCreated;
     await expect(page.getByText(/Cancel Student/i)).toBeVisible();
 
     // === Step 3: Book the main student using a subscription ===
@@ -129,8 +142,9 @@ test.describe("Booking lifecycle", () => {
     await subscriptionSelect.click();
     await page.getByRole("option").first().click();
 
+    bookingCreated = bookingWrite(page, "POST");
     await dialog.getByRole("button", { name: "Save" }).click();
-    await page.waitForLoadState("networkidle");
+    await bookingCreated;
 
     // Assert: Lifecycle Student appears in the roster
     await expect(page.getByText(/Lifecycle Student/i)).toBeVisible();
@@ -139,8 +153,9 @@ test.describe("Booking lifecycle", () => {
     const bookingRow = page
       .getByTestId("booking-row")
       .filter({ hasText: /Lifecycle Student/i });
+    const attendedWrite = bookingWrite(page, "PATCH");
     await bookingRow.getByTestId("mark-attended-button").click();
-    await page.waitForLoadState("networkidle");
+    await attendedWrite;
 
     // Assert: status badge shows "Attended"
     await expect(bookingRow.getByTestId("booking-status-badge")).toContainText(
@@ -149,7 +164,6 @@ test.describe("Booking lifecycle", () => {
 
     // === Step 5: Check the monthly recap on the Dashboard ===
     await page.getByRole("link", { name: "Dashboard" }).click();
-    await page.waitForLoadState("networkidle");
 
     await expect(
       page.getByRole("heading", { name: /Monthly Recap/i }),
@@ -159,7 +173,6 @@ test.describe("Booking lifecycle", () => {
     const sessionMonth = yearMonthFor(1);
     const monthPicker = page.getByLabel(/Month/i);
     await monthPicker.fill(sessionMonth);
-    await page.waitForLoadState("networkidle");
 
     // Lifecycle Student row must show sessions_attended = 1
     const recapRow = page
@@ -173,16 +186,15 @@ test.describe("Booking lifecycle", () => {
 
     // === Step 6: Cancel student2's booking and verify the slot is freed ===
     await page.getByRole("link", { name: "Sessions" }).click();
-    await page.waitForLoadState("networkidle");
 
     await page.getByTestId("capacity-badge").first().click();
-    await page.waitForLoadState("networkidle");
 
     const cancelRow = page
       .getByTestId("booking-row")
       .filter({ hasText: /Cancel Student/i });
+    const cancelWrite = bookingWrite(page, "PATCH");
     await cancelRow.getByTestId("cancel-booking-button").click();
-    await page.waitForLoadState("networkidle");
+    await cancelWrite;
 
     // Booking is now shown as Cancelled
     await expect(cancelRow.getByTestId("booking-status-badge")).toContainText(
@@ -205,8 +217,9 @@ test.describe("Booking lifecycle", () => {
     await typeSelect3.click();
     await page.getByRole("option", { name: "Single" }).click();
 
+    const rebookWrite = bookingWrite(page, "POST");
     await dialog3.getByRole("button", { name: "Save" }).click();
-    await page.waitForLoadState("networkidle");
+    await rebookWrite;
 
     // A new Booked row for Cancel Student appears (most-recent = last in list)
     const rebookedRows = page
@@ -275,21 +288,20 @@ test.describe("Booking lifecycle", () => {
     }
 
     // Log in
-    await page.goto("http://localhost:5175/");
+    await page.goto("/");
     await page.getByLabel("Email").fill("capacity-teacher@school.example");
     await page.getByLabel("Password").fill("password");
     await page.getByRole("button", { name: "Sign in" }).click();
-    await page.waitForLoadState("networkidle");
 
     await page.getByRole("link", { name: "Sessions" }).click();
-    await page.waitForLoadState("networkidle");
 
     // The session row shows 17/17 (fully booked)
-    await expect(page.getByTestId("capacity-badge").first()).toHaveText("17/17");
+    await expect(page.getByTestId("capacity-badge").first()).toHaveText(
+      "17/17",
+    );
 
     // Navigate to the session show page
     await page.getByTestId("capacity-badge").first().click();
-    await page.waitForLoadState("networkidle");
 
     // Attempt to add the 18th student
     await page.getByTestId("add-student-button").click();
@@ -306,18 +318,17 @@ test.describe("Booking lifecycle", () => {
     await page.getByRole("option", { name: "Single" }).click();
 
     // Set up network listener BEFORE clicking Save to avoid race conditions
-    const saveResponsePromise = page.waitForResponse(
-      (resp) =>
-        resp.url().includes("/bookings") && resp.request().method() === "POST",
-    );
+    const saveResponsePromise = bookingWrite(page, "POST");
     await dialog.getByRole("button", { name: "Save" }).click();
     const saveResponse = await saveResponsePromise;
 
     // The capacity trigger must reject the request
     expect(saveResponse.status()).toBeGreaterThanOrEqual(400);
 
-    // Wait for the UI to settle after the rejection
-    await page.waitForLoadState("networkidle");
+    // A friendly notification is shown instead of the raw Postgres error
+    await expect(
+      page.getByText("This class is full and cannot take any more students."),
+    ).toBeVisible();
 
     // Cap18 Student must NOT appear in the roster (no live booking created)
     const cap18Rows = page

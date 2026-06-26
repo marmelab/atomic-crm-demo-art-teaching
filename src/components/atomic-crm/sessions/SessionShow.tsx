@@ -2,6 +2,7 @@ import {
   RecordContextProvider,
   ShowBase,
   useGetList,
+  useGetOne,
   useNotify,
   useRefresh,
   useShowContext,
@@ -60,6 +61,16 @@ const BookingRow = ({ booking }: BookingRowProps) => {
   const refresh = useRefresh();
   const [update, { isPending }] = useUpdate();
 
+  const usesSubscription =
+    booking.type === "subscription" && booking.subscription_id != null;
+  // Load the linked pack's balance (the *_summary view exposes
+  // sessions_remaining) so we can refuse to over-consume it.
+  const { data: subscription } = useGetOne(
+    "subscriptions",
+    { id: booking.subscription_id as Identifier },
+    { enabled: usesSubscription },
+  );
+
   const isCancelled = booking.status === "cancelled";
 
   const updateStatus = (status: BookingStatus, extra?: Partial<Booking>) => {
@@ -86,7 +97,21 @@ const BookingRow = ({ booking }: BookingRowProps) => {
 
   const handleCancel = () =>
     updateStatus("cancelled", { cancelled_at: new Date().toISOString() });
-  const handleAttended = () => updateStatus("attended");
+  const handleAttended = () => {
+    // Marking attended consumes one prepaid session. Refuse if the linked pack
+    // has no balance left, otherwise sessions_remaining would go negative.
+    if (
+      usesSubscription &&
+      subscription != null &&
+      subscription.sessions_remaining <= 0
+    ) {
+      notify("resources.bookings.notification.subscription_exhausted", {
+        type: "warning",
+      });
+      return;
+    }
+    updateStatus("attended");
+  };
   const handleNoShow = () => updateStatus("no_show");
 
   const statusStyle = STATUS_STYLES[booking.status] ?? STATUS_STYLES["booked"];

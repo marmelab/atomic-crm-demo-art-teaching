@@ -345,6 +345,12 @@ export const frenchCrmMessages = {
         pack_created: "Abonnement créé",
         status_updated: "Réservation mise à jour",
       },
+      notification: {
+        session_full:
+          "Ce cours est complet et ne peut accueillir aucun élève supplémentaire.",
+        subscription_exhausted:
+          "Cet abonnement n'a plus de séance disponible. Vendez un nouvel abonnement avant de marquer la présence.",
+      },
       panel: {
         history: "Historique des réservations",
         empty: "Aucune réservation pour l'instant",

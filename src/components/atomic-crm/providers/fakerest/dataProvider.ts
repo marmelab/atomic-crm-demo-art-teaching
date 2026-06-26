@@ -8,6 +8,7 @@ import {
 import fakeRestDataProvider from "ra-data-fakerest";
 
 import type {
+  Booking,
   Contact,
   ContactNote,
   Sale,
@@ -15,6 +16,7 @@ import type {
   SignUpData,
   Task,
 } from "../../types";
+import { recomputeBookingSummaries } from "./bookingSummaries";
 import type { ConfigurationContextValue } from "../../root/ConfigurationContext";
 import { getActivityLog } from "../commons/activity";
 import { getContactAvatar } from "../commons/getContactAvatar";
@@ -443,7 +445,7 @@ export const createDataProvider = ({
       {
         // Keep sessions_summary in sync with sessions for FakeRest demo.
         // In Supabase, this is a DB view; here we mirror it manually.
-        // nb_booked and nb_attended remain 0 until TASK-005 ships bookings.
+        // nb_booked / nb_attended are maintained by the bookings callback below.
         resource: "sessions",
         afterCreate: async (result) => {
           const { id, ...rest } = result.data;
@@ -477,6 +479,49 @@ export const createDataProvider = ({
           return result;
         },
       },
+      {
+        // Booking is the core flow of the app. In Supabase the capacity check
+        // is a trigger and the summaries are views; for the FakeRest demo we
+        // enforce capacity here and recompute every affected summary so the
+        // session badge, pack balance and monthly recap stay live without a
+        // page reload.
+        resource: "bookings",
+        beforeCreate: async (params) => {
+          if (params.data.status === "cancelled") return params;
+          const sessionId = params.data.session_id;
+          const [{ data: session }, { data: bookings }] = await Promise.all([
+            baseDataProvider.getOne("sessions", { id: sessionId }),
+            baseDataProvider.getList("bookings", {
+              filter: { session_id: sessionId },
+              pagination: { page: 1, perPage: 10_000 },
+              sort: { field: "id", order: "ASC" },
+            }),
+          ]);
+          const live = bookings.filter(
+            (b: Booking) => b.status !== "cancelled",
+          ).length;
+          if (live >= session.capacity + session.overbooking) {
+            // Message mirrors the Postgres trigger so the create dialog's
+            // friendly error mapping works in both demo and real backends.
+            throw new Error(
+              `Session ${sessionId} is fully booked (capacity=${session.capacity}, overbooking=${session.overbooking})`,
+            );
+          }
+          return params;
+        },
+        afterCreate: async (result) => {
+          await recomputeBookingSummaries(baseDataProvider, result.data);
+          return result;
+        },
+        afterUpdate: async (result) => {
+          await recomputeBookingSummaries(baseDataProvider, result.data);
+          return result;
+        },
+        afterDelete: async (result) => {
+          await recomputeBookingSummaries(baseDataProvider, result.data);
+          return result;
+        },
+      } satisfies ResourceCallbacks<Booking>,
     ],
   ) as CrmDataProvider;
 

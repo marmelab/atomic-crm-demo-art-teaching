@@ -339,6 +339,11 @@ export const englishCrmMessages = {
         pack_created: "Subscription created",
         status_updated: "Booking updated",
       },
+      notification: {
+        session_full: "This class is full and cannot take any more students.",
+        subscription_exhausted:
+          "This pack has no sessions left. Sell a new pack before marking attendance.",
+      },
       panel: {
         history: "Booking history",
         empty: "No bookings yet",

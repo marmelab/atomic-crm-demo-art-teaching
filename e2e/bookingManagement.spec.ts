@@ -19,17 +19,14 @@ test.describe("Booking management", () => {
     });
 
     // Log in as teacher
-    await page.goto("http://localhost:5175/");
+    await page.goto("/");
     await page.getByLabel("Email").fill("teacher@school.example");
     await page.getByLabel("Password").fill("password");
     await page.getByRole("button", { name: "Sign in" }).click();
-    await page.waitForLoadState("networkidle");
 
     // Navigate to Sessions and create a new session
     await page.getByRole("link", { name: "Sessions" }).click();
-    await page.waitForLoadState("networkidle");
     await page.getByRole("button", { name: "New session" }).click();
-    await page.waitForLoadState("networkidle");
 
     // Fill starts_at: two weeks from now
     const twoWeeksOut = new Date();
@@ -42,9 +39,7 @@ test.describe("Booking management", () => {
     await expect(page.getByText("Element created")).toBeVisible();
 
     // We are now on the SessionShow page — verify roster is present
-    await expect(
-      page.getByTestId("capacity-badge").first(),
-    ).toBeVisible();
+    await expect(page.getByTestId("capacity-badge").first()).toBeVisible();
 
     // Act: add a student via the "Add student" dialog
     await page.getByTestId("add-student-button").click();
@@ -64,16 +59,19 @@ test.describe("Booking management", () => {
     await typeSelect.click();
     await page.getByRole("option", { name: "Single" }).click();
 
-    // Submit
+    // Submit — wait for the create request so the roster reflects it
+    const bookingCreated = page.waitForResponse(
+      (resp) =>
+        resp.url().includes("/bookings") && resp.request().method() === "POST",
+    );
     await dialog.getByRole("button", { name: "Save" }).click();
+    await bookingCreated;
 
     // Booking should be created and row appears in the roster
-    await page.waitForLoadState("networkidle");
     await expect(page.getByTestId("booking-row").first()).toBeVisible();
 
     // Act: mark the booking as attended
     await page.getByTestId("mark-attended-button").first().click();
-    await page.waitForLoadState("networkidle");
 
     // Assert: status badge shows "Attended"
     await expect(

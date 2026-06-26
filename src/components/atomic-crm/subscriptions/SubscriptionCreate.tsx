@@ -2,6 +2,7 @@ import { CreateBase, Form, useGetIdentity } from "ra-core";
 import { Card, CardContent } from "@/components/ui/card";
 
 import { FormToolbar } from "../layout/FormToolbar";
+import { DEFAULT_PACK_SIZE } from "../scheduleDefaults";
 import { SubscriptionInputs } from "./SubscriptionInputs";
 
 /**
@@ -16,7 +17,7 @@ export const SubscriptionCreate = () => {
         <Form
           defaultValues={{
             sales_id: identity?.id,
-            total_sessions: 20,
+            total_sessions: DEFAULT_PACK_SIZE,
             purchased_at: new Date().toISOString().split("T")[0],
           }}
         >

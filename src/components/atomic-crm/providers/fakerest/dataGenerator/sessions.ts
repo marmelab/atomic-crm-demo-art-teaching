@@ -1,6 +1,10 @@
 import { datatype, random } from "faker/locale/en_US";
 
 import type { Booking, Session, SessionSummary } from "../../../types";
+import {
+  DEFAULT_SESSION_CAPACITY,
+  DEFAULT_SESSION_OVERBOOKING,
+} from "../../../scheduleDefaults";
 import type { Db } from "./types";
 
 const DURATION_OPTIONS = [60, 90, 120, 150] as const;
@@ -24,8 +28,8 @@ export const generateSessions = (db: Db, size = 40): Session[] =>
       created_at: new Date().toISOString(),
       starts_at: startsAt.toISOString(),
       duration_minutes: random.arrayElement(DURATION_OPTIONS),
-      capacity: 15,
-      overbooking: 2,
+      capacity: DEFAULT_SESSION_CAPACITY,
+      overbooking: DEFAULT_SESSION_OVERBOOKING,
       notes: datatype.boolean() ? "Regular class" : null,
       sales_id: sale.id,
     };

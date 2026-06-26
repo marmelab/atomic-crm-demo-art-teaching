@@ -428,6 +428,14 @@ BEGIN
     RETURN NEW;
   END IF;
 
+  -- Serialize concurrent bookings for the same session. Without this lock,
+  -- two concurrent inserts under READ COMMITTED each count the other's
+  -- uncommitted row as absent, both pass the capacity check, and the session
+  -- is overbooked past the cap (TOCTOU race). The transaction-scoped advisory
+  -- lock forces the second transaction to wait until the first commits, so
+  -- the count below always reflects all committed live bookings.
+  PERFORM pg_advisory_xact_lock(NEW.session_id);
+
   -- Read capacity and overbooking allowance for this session
   SELECT capacity, overbooking
     INTO v_capacity, v_overbooking

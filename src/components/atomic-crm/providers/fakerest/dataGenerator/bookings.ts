@@ -1,9 +1,8 @@
 import { datatype, random } from "faker/locale/en_US";
 
 import type { Booking, BookingStatus, BookingType } from "../../../types";
+import { MAX_BOOKINGS_PER_SESSION } from "../../../scheduleDefaults";
 import type { Db } from "./types";
-
-const MAX_BOOKINGS_PER_SESSION = 17; // capacity (15) + overbooking (2)
 
 /** Status distribution for past sessions: realistic attended/no_show/cancelled mix. */
 const PAST_STATUS_WEIGHTS: { status: BookingStatus; weight: number }[] = [

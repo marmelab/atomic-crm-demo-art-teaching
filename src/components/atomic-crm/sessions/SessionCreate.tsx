@@ -2,6 +2,11 @@ import { CreateBase, Form, useGetIdentity } from "ra-core";
 import { Card, CardContent } from "@/components/ui/card";
 
 import { FormToolbar } from "../layout/FormToolbar";
+import {
+  DEFAULT_SESSION_CAPACITY,
+  DEFAULT_SESSION_DURATION_MINUTES,
+  DEFAULT_SESSION_OVERBOOKING,
+} from "../scheduleDefaults";
 import { SessionInputs } from "./SessionInputs";
 
 /**
@@ -22,9 +27,9 @@ export const SessionCreate = () => {
           defaultValues={{
             sales_id: identity?.id,
             starts_at: tomorrow.toISOString(),
-            duration_minutes: 120,
-            capacity: 15,
-            overbooking: 2,
+            duration_minutes: DEFAULT_SESSION_DURATION_MINUTES,
+            capacity: DEFAULT_SESSION_CAPACITY,
+            overbooking: DEFAULT_SESSION_OVERBOOKING,
           }}
         >
           <Card>

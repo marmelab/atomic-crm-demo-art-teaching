@@ -98,6 +98,18 @@ export type Task = {
   sales_id?: Identifier;
 } & Pick<RaRecord, "id">;
 
+/**
+ * A prepaid pack of sessions bought by a student.
+ *
+ * Domain vocabulary mapping (single concept, three surface terms):
+ * - "subscription" — the canonical CODE term: table, type, resource, route,
+ *   and components (Subscription*) all use it. Always use this in code.
+ * - "pack" — a USER-FACING term ("Buy pack" action). Friendlier shorthand.
+ * - "prepaid" — a USER-FACING term for the remaining balance ("Prepaid
+ *   remaining" column / `prepaid-remaining` testid).
+ * When adding code, prefer "subscription"; when adding UI copy, reuse one of
+ * the existing user-facing terms rather than introducing a fourth.
+ */
 export type Subscription = {
   contact_id: Identifier;
   created_at: string;
