@@ -277,7 +277,7 @@ export const frenchCrmMessages = {
         overbooking: "Surbooking",
         notes: "Notes",
         bookings: "Réservations",
-        sales_id: "Responsable de compte",
+        sales_id: "Professeur",
         created_at: "Créé le",
       },
       action: {
@@ -306,6 +306,7 @@ export const frenchCrmMessages = {
         view_month: "Mois",
         view_toggle_label: "Vue du calendrier",
         fetch_error: "Impossible de charger les séances. Veuillez réessayer.",
+        teacher: "Professeur",
       },
     },
     bookings: {

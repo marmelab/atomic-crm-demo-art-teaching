@@ -10,9 +10,11 @@
 
 import { useNavigate } from "react-router";
 import { format } from "date-fns";
+import { useTranslate } from "ra-core";
 
 import { CapacityBadge } from "../CapacityBadge";
 import type { SessionSummary } from "../../types";
+import { useGetSalesName } from "../../sales/useGetSalesName";
 import { cn } from "@/lib/utils";
 
 export interface SessionBlockGeometry {
@@ -40,6 +42,8 @@ export const SessionEventBlock = ({
   geometry,
 }: SessionEventBlockProps) => {
   const navigate = useNavigate();
+  const translate = useTranslate();
+  const teacherName = useGetSalesName(session.sales_id);
 
   const startLabel = format(new Date(session.starts_at), "HH:mm");
 
@@ -61,7 +65,7 @@ export const SessionEventBlock = ({
     <div
       role="button"
       tabIndex={0}
-      aria-label={`Session at ${startLabel}`}
+      aria-label={`Session at ${startLabel}${teacherName ? ` — ${translate("resources.sessions.calendar.teacher")}: ${teacherName}` : ""}`}
       data-testid="session-event-block"
       onClick={handleClick}
       onKeyDown={handleKeyDown}
@@ -80,6 +84,14 @@ export const SessionEventBlock = ({
       }}
     >
       <span className="font-semibold leading-none truncate">{startLabel}</span>
+      {teacherName && (
+        <span
+          className="leading-none truncate text-muted-foreground"
+          data-testid="session-event-block-teacher"
+        >
+          {teacherName}
+        </span>
+      )}
       {session.notes && (
         <span className="leading-none truncate text-muted-foreground">
           {session.notes}

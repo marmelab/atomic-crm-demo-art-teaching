@@ -301,6 +301,18 @@ const SessionShowContent = () => {
             </dd>
 
             <dt className="text-sm font-medium text-muted-foreground">
+              {translate("resources.sessions.fields.sales_id")}
+            </dt>
+            <dd>
+              <ReferenceField
+                source="sales_id"
+                reference="sales"
+                link={false}
+                empty="—"
+              />
+            </dd>
+
+            <dt className="text-sm font-medium text-muted-foreground">
               {translate("resources.sessions.fields.notes")}
             </dt>
             <dd>
