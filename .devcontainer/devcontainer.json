@@ -4,7 +4,7 @@
   "build": {
     "dockerfile": "Dockerfile"
   },
-  "workspaceFolder": "/workspaces/atomic-crm",
+  "workspaceFolder": "/workspaces/atomic-crm-demo-art-teaching",
   "workspaceMount": "source=${localWorkspaceFolder},target=${containerWorkspaceFolder},type=bind,consistency=cached",
   "postCreateCommand": "bash .devcontainer/post-create.sh",
   "remoteUser": "node",
@@ -23,6 +23,7 @@
       "extensions": []
     }
   },
+  "forwardPorts": [5173, 5174],
   "mounts": [
     {
       "type": "volume",
