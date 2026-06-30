@@ -194,10 +194,7 @@ export const ContactBookingCalendar = ({
   const handleToday = () => setAnchorDate(new Date());
 
   return (
-    <div
-      className="flex flex-col gap-2"
-      data-testid="contact-booking-calendar"
-    >
+    <div className="flex flex-col gap-2" data-testid="contact-booking-calendar">
       {/* Toolbar */}
       <div className="flex items-center gap-2">
         <Button
