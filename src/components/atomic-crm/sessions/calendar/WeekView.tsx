@@ -172,7 +172,7 @@ export const WeekView = ({
 
   return (
     <div
-      className="flex flex-col border rounded-lg overflow-hidden bg-background"
+      className="flex flex-1 min-h-0 flex-col border rounded-lg overflow-hidden bg-background"
       data-testid="week-view"
     >
       {/* Column header row */}
@@ -211,7 +211,7 @@ export const WeekView = ({
       </div>
 
       {/* Scrollable time grid body */}
-      <div className="overflow-y-auto" style={{ maxHeight: "70vh" }}>
+      <div className="flex-1 min-h-0 overflow-y-auto">
         <div className="flex">
           {/* Hour gutter */}
           <div
