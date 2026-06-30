@@ -277,7 +277,7 @@ export const frenchCrmMessages = {
         overbooking: "Surbooking",
         notes: "Notes",
         bookings: "Réservations",
-        sales_id: "Responsable de compte",
+        sales_id: "Professeur",
         created_at: "Créé le",
       },
       action: {
