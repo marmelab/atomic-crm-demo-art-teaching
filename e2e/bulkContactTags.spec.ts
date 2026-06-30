@@ -1,19 +1,26 @@
 import { test, expect } from "./fixtures";
 
-test("user adds a tag to several contacts", async ({
+/**
+ * Verify that all contact-facing tag affordances have been removed:
+ * - No tag badges in the contact list
+ * - No tags filter category in the contact list sidebar
+ * - No bulk-tag button in bulk actions
+ * - No tags section in the contact detail view
+ */
+test("contact list and detail view have no tag UI", async ({
   page,
-  isMobile,
-  createContact,
+  createUser,
   createSales,
+  createContact,
+  isMobile,
   menu,
-  dismissToast,
 }) => {
-  test.skip(isMobile, "Bulk tag is only available on desktop");
+  test.skip(isMobile, "Desktop-only test: bulk actions and filter sidebar");
 
   const sales = await createSales({
-    email: "john@doe.com",
-    first_name: "John",
-    last_name: "Doe",
+    email: "teacher@school.example",
+    first_name: "Teacher",
+    last_name: "Smith",
     password: "password",
   });
 
@@ -23,41 +30,30 @@ test("user adds a tag to several contacts", async ({
     sales_id: sales.id,
     title: "CTO",
   });
-  await createContact({
-    first_name: "Grace",
-    last_name: "Hopper",
-    sales_id: sales.id,
-    title: "Rear Admiral",
-  });
 
   await page.goto("/");
-
-  await page.getByLabel("Email").fill("john@doe.com");
+  await page.getByLabel("Email").fill("teacher@school.example");
   await page.getByLabel("Password").fill("password");
   await page.getByRole("button", { name: "Sign in" }).click();
 
   await expect(page).toHaveTitle(/Atomic CRM/);
-  await expect(page.getByRole("link", { name: "Students" })).toBeVisible();
 
   await menu.goToStudents();
   await expect(page.getByText("Ada Lovelace")).toBeVisible();
-  await expect(page.getByText("Grace Hopper")).toBeVisible();
 
-  const checkboxes = page.getByRole("checkbox");
-  await checkboxes.nth(1).click();
-  await page.getByRole("button", { name: /select all/i }).click();
-
-  await page.getByRole("button", { name: /^Tag$/ }).click();
-  await page.getByRole("button", { name: "Create new tag" }).click();
-  await page.getByLabel("Tag name").fill("Prospect");
-  await page.getByRole("button", { name: "Save" }).click();
-
-  await dismissToast("Tag added to 2 students");
-
+  // No tags filter category in the sidebar
   await expect(
-    page.getByText("Grace Hopper").locator("xpath=ancestor::a[1]"),
-  ).toContainText("Prospect");
+    page.getByRole("button", { name: /tags/i }),
+  ).not.toBeVisible();
+
+  // No bulk-tag button when rows are selected
+  const checkbox = page.getByRole("checkbox").first();
+  await checkbox.click();
   await expect(
-    page.getByText("Ada Lovelace").locator("xpath=ancestor::a[1]"),
-  ).toContainText("Prospect");
+    page.getByRole("button", { name: /^Tag$/i }),
+  ).not.toBeVisible();
+
+  // Navigate to student detail — no tags section
+  await page.getByText("Ada Lovelace").click();
+  await expect(page.getByText(/tags/i)).not.toBeVisible();
 });

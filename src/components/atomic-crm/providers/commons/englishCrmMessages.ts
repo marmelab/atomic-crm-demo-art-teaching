@@ -75,20 +75,6 @@ export const englishCrmMessages = {
       list: {
         error_loading: "Error loading students",
       },
-      bulk_tag: {
-        action: "Tag",
-        back: "Back to tags",
-        create_description:
-          "Create a new tag and apply it to the selected students.",
-        description:
-          "Choose an existing tag or create a new one for the selected students.",
-        empty: "No tags yet. Create one to tag the selected students.",
-        error: "Failed to add tag to students",
-        noop: "Selected students already have this tag",
-        success:
-          "Tag added to %{smart_count} student |||| Tag added to %{smart_count} students",
-        title: "Add tag to students",
-      },
       merge: {
         action: "Merge with another student",
         confirm: "Merge Students",
@@ -114,7 +100,6 @@ export const englishCrmMessages = {
         search: "Search name...",
         this_week: "This week",
         today: "Today",
-        tags: "Tags",
         tasks: "Tasks",
       },
       hot: {

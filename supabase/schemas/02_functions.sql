@@ -261,7 +261,6 @@ DECLARE
   loser_contact contacts%ROWTYPE;
   merged_emails jsonb;
   merged_phones jsonb;
-  merged_tags bigint[];
   winner_emails jsonb;
   loser_emails jsonb;
   winner_phones jsonb;
@@ -352,14 +351,6 @@ BEGIN
   merged_phones := (SELECT jsonb_agg(value) FROM jsonb_each(phone_map));
   merged_phones := COALESCE(merged_phones, '[]'::jsonb);
 
-  -- Merge tags (remove duplicates)
-  merged_tags := ARRAY(
-    SELECT DISTINCT unnest(
-      COALESCE(winner_contact.tags, ARRAY[]::bigint[]) ||
-      COALESCE(loser_contact.tags, ARRAY[]::bigint[])
-    )
-  );
-
   -- 4. Update winner with merged data
   UPDATE contacts SET
     avatar = COALESCE(winner_contact.avatar, loser_contact.avatar),
@@ -374,8 +365,7 @@ BEGIN
     has_newsletter = COALESCE(winner_contact.has_newsletter, loser_contact.has_newsletter),
     first_seen = LEAST(COALESCE(winner_contact.first_seen, loser_contact.first_seen), COALESCE(loser_contact.first_seen, winner_contact.first_seen)),
     last_seen = GREATEST(COALESCE(winner_contact.last_seen, loser_contact.last_seen), COALESCE(loser_contact.last_seen, winner_contact.last_seen)),
-    sales_id = COALESCE(winner_contact.sales_id, loser_contact.sales_id),
-    tags = merged_tags
+    sales_id = COALESCE(winner_contact.sales_id, loser_contact.sales_id)
   WHERE id = winner_id;
 
   -- 5. Delete loser contact
