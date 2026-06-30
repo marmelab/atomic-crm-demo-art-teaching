@@ -21,7 +21,6 @@ create table public.contacts (
     first_seen timestamp with time zone,
     last_seen timestamp with time zone,
     has_newsletter boolean,
-    status text,
     tags bigint[],
     sales_id bigint,
     linkedin_url text,

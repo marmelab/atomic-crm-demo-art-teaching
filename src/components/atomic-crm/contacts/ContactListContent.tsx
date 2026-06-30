@@ -15,7 +15,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { RotateCcw } from "lucide-react";
 
-import { Status } from "../misc/Status";
 import { formatRelativeDate } from "../misc/RelativeDate";
 import type { Contact } from "../types";
 import { Avatar } from "./Avatar";
@@ -151,8 +150,7 @@ const ContactItemContent = ({
             >
               {translate("crm.common.last_activity_with_date", {
                 date: lastActivity,
-              })}{" "}
-              <Status status={contact.status} />
+              })}
             </div>
           </div>
         )}
@@ -247,7 +245,6 @@ const ContactItemContentMobile = ({ contact }: { contact: Contact }) => {
             <div className="font-medium">
               <RecordRepresentation />
             </div>
-            <Status status={contact.status} />
           </div>
           {contact.nb_tasks ? (
             <div className="text-sm text-muted-foreground">

@@ -34,15 +34,12 @@ export const NoteCreate = ({
 
   if (!record || !identity) return null;
 
-  const defaultStatus = reference === "contacts" ? record.status : undefined;
-
   return (
     <CreateBase resource={resource} redirect={false}>
       <Form>
         <div className={cn("space-y-3", className)}>
-          <NoteInputs defaultStatus={defaultStatus} showStatus={showStatus} />
+          <NoteInputs showStatus={showStatus} />
           <NoteCreateButton
-            defaultStatus={defaultStatus}
             record={record}
             reference={reference}
           />
@@ -53,11 +50,9 @@ export const NoteCreate = ({
 };
 
 const NoteCreateButton = ({
-  defaultStatus,
   reference,
   record,
 }: {
-  defaultStatus?: string;
   reference: "contacts";
   record: RaRecord<Identifier>;
 }) => {
@@ -74,18 +69,13 @@ const NoteCreateButton = ({
     date: string;
     text: null;
     attachments: null;
-    status?: string;
   } = {
     date: getCurrentDate(),
     text: null,
     attachments: null,
   };
 
-  const handleSuccess = (data: any) => {
-    if (reference === "contacts") {
-      resetValues.status = data.status ?? defaultStatus;
-    }
-
+  const handleSuccess = () => {
     reset(resetValues, { keepValues: false });
     refetch();
     update(reference, {
@@ -93,7 +83,6 @@ const NoteCreateButton = ({
       data: {
         last_seen:
           reference === "contacts" ? new Date().toISOString() : undefined,
-        status: data.status,
       },
       previousData: record,
     });
