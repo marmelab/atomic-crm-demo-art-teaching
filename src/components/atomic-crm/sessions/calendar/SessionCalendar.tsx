@@ -110,10 +110,7 @@ export const SessionCalendar = () => {
   const monthWeeks = getMonthGrid(anchorDate);
 
   return (
-    <div
-      className="flex flex-col gap-3 mt-2 overflow-hidden"
-      style={{ height: "calc(100dvh - 76px)" }}
-    >
+    <div className="flex flex-1 min-h-0 flex-col gap-3 overflow-hidden">
       <CalendarToolbar
         viewMode={viewMode}
         periodLabel={periodLabel}
