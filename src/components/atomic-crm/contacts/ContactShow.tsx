@@ -20,7 +20,6 @@ import MobileHeader from "../layout/MobileHeader";
 import { MobileContent } from "../layout/MobileContent";
 import { NoteCreate, NotesIterator, NotesIteratorMobile } from "../notes";
 import { NoteCreateSheet } from "../notes/NoteCreateSheet";
-import { TagsListEdit } from "./TagsListEdit";
 import { ContactEditSheet } from "./ContactEditSheet";
 import { ContactPersonalInfo } from "./ContactPersonalInfo";
 import { ContactBackgroundInfo } from "./ContactBackgroundInfo";
@@ -188,15 +187,6 @@ const ContactShowContentMobile = () => {
                 <Separator />
                 <div className="mt-3">
                   <ContactBackgroundInfo />
-                </div>
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold">
-                  {translate("resources.tags.name", { smart_count: 2 })}
-                </h3>
-                <Separator />
-                <div className="mt-3">
-                  <TagsListEdit />
                 </div>
               </div>
             </div>

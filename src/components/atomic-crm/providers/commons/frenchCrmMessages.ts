@@ -78,21 +78,6 @@ export const frenchCrmMessages = {
       list: {
         error_loading: "Erreur lors du chargement des élèves",
       },
-      bulk_tag: {
-        action: "Étiqueter",
-        back: "Retour aux étiquettes",
-        create_description:
-          "Créez une nouvelle étiquette et appliquez-la aux élèves sélectionnés.",
-        description:
-          "Choisissez une étiquette existante ou créez-en une pour les élèves sélectionnés.",
-        empty:
-          "Aucune étiquette pour le moment. Créez-en une pour étiqueter les élèves sélectionnés.",
-        error: "Impossible d'ajouter l'étiquette aux élèves",
-        noop: "Les élèves sélectionnés ont déjà cette étiquette",
-        success:
-          "Étiquette ajoutée à %{smart_count} élève |||| Étiquette ajoutée à %{smart_count} élèves",
-        title: "Ajouter une étiquette aux élèves",
-      },
       merge: {
         action: "Fusionner avec un autre élève",
         confirm: "Fusionner les élèves",
@@ -118,7 +103,6 @@ export const frenchCrmMessages = {
         search: "Rechercher nom...",
         this_week: "Cette semaine",
         today: "Aujourd'hui",
-        tags: "Étiquettes",
         tasks: "Tâches",
       },
       hot: {
