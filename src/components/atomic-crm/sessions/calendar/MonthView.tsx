@@ -46,7 +46,7 @@ export const MonthView = ({
 }: MonthViewProps) => {
   return (
     <div
-      className="flex flex-col overflow-hidden rounded-md border bg-background"
+      className="flex flex-1 flex-col overflow-hidden rounded-md border bg-background"
       data-testid="month-view"
     >
       {/* Weekday header row */}
@@ -61,11 +61,11 @@ export const MonthView = ({
         ))}
       </div>
 
-      {/* Week rows */}
+      {/* Week rows — each row grows to fill available height equally */}
       {weeks.map((week, weekIndex) => (
         <div
           key={weekIndex}
-          className="grid flex-1 grid-cols-7 border-b last:border-b-0"
+          className="grid min-h-0 flex-1 grid-cols-7 border-b last:border-b-0"
         >
           {week.map((day, dayIndex) => (
             <DayCell
@@ -105,7 +105,7 @@ const DayCell = ({ day, anchorDate, sessionsByDay }: DayCellProps) => {
   return (
     <div
       className={cn(
-        "min-h-[80px] border-r p-1 last:border-r-0",
+        "min-h-[80px] border-r p-1 last:border-r-0 flex flex-col",
         !isCurrentMonth && "bg-muted/40",
         isTodayCell && "bg-primary/5",
       )}

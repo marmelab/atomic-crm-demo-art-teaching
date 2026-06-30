@@ -15,7 +15,8 @@ export const SessionList = () => {
   return (
     <List
       actions={false}
-      perPage={25}
+      perPage={500}
+      pagination={false}
       sort={{ field: "starts_at", order: "ASC" }}
       filterDefaultValues={{ "starts_at@gte": now }}
     >
