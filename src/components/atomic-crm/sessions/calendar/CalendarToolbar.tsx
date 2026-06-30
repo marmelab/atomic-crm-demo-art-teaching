@@ -110,7 +110,9 @@ export const CalendarToolbar = ({
           value={viewMode}
           onValueChange={handleValueChange}
           variant="outline"
-          aria-label={translate("resources.sessions.calendar.view_toggle_label")}
+          aria-label={translate(
+            "resources.sessions.calendar.view_toggle_label",
+          )}
         >
           <ToggleGroupItem
             value="week"
