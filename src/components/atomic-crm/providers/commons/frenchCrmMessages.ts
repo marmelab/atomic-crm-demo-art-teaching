@@ -322,7 +322,7 @@ export const frenchCrmMessages = {
         created_at: "Créé le",
       },
       type: {
-        subscription: "Abonnement",
+        subscription: "Séances prépayées",
         single: "Séance unique",
         discovery: "Découverte",
       },
@@ -339,7 +339,7 @@ export const frenchCrmMessages = {
         mark_no_show: "Absent",
         cancel: "Annuler",
         created: "Réservation créée",
-        pack_created: "Abonnement créé",
+        pack_created: "Séances prépayées créées",
         status_updated: "Réservation mise à jour",
       },
       notification: {
