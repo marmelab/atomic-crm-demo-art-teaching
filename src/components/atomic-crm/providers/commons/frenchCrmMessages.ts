@@ -310,6 +310,19 @@ export const frenchCrmMessages = {
         placeholder:
           "La liste des participants apparaîtra ici une fois les réservations ajoutées.",
       },
+      calendar: {
+        title: "Calendrier",
+        today: "Aujourd'hui",
+        prev: "Période précédente",
+        next: "Période suivante",
+        prev_week: "Semaine précédente",
+        next_week: "Semaine suivante",
+        hour_gutter: "Étiquettes des heures",
+        view_week: "Semaine",
+        view_month: "Mois",
+        view_toggle_label: "Vue du calendrier",
+        fetch_error: "Impossible de charger les séances. Veuillez réessayer.",
+      },
     },
     bookings: {
       name: "Réservation |||| Réservations",
