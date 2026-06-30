@@ -6,7 +6,6 @@ import { ShowButton } from "@/components/admin/show-button";
 
 import { AddTask } from "../tasks/AddTask";
 import { TasksIterator } from "../tasks/TasksIterator";
-import { TagsListEdit } from "./TagsListEdit";
 import { ContactPersonalInfo } from "./ContactPersonalInfo";
 import { ContactBackgroundInfo } from "./ContactBackgroundInfo";
 import { AsideSection } from "../misc/AsideSection";
@@ -43,12 +42,6 @@ export const ContactAside = ({ link = "edit" }: { link?: "edit" | "show" }) => {
         title={translate("resources.contacts.field_categories.background_info")}
       >
         <ContactBackgroundInfo />
-      </AsideSection>
-
-      <AsideSection
-        title={translate("resources.tags.name", { smart_count: 2 })}
-      >
-        <TagsListEdit />
       </AsideSection>
 
       <AsideSection
