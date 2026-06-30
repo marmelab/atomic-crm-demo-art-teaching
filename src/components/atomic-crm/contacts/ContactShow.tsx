@@ -24,13 +24,13 @@ import { ContactEditSheet } from "./ContactEditSheet";
 import { ContactPersonalInfo } from "./ContactPersonalInfo";
 import { ContactBackgroundInfo } from "./ContactBackgroundInfo";
 import { ContactTasksList } from "./ContactTasksList";
-import type { Booking, Contact, SubscriptionSummary } from "../types";
+import type { Contact, SubscriptionSummary } from "../types";
 import { Avatar } from "./Avatar";
 import { ContactAside } from "./ContactAside";
 import { MobileBackButton } from "../misc/MobileBackButton";
 import { BuyPackDialog } from "../bookings/BookingCreate";
 import { SubscriptionListItem } from "./SubscriptionListItem";
-import { BookingHistoryList } from "./BookingHistoryList";
+import { ContactBookingCalendar } from "./ContactBookingCalendar";
 
 export const ContactShow = (props: ShowBaseProps = {}) => {
   const isMobile = useIsMobile();
@@ -197,7 +197,7 @@ const ContactShowContentMobile = () => {
   );
 };
 
-/** Mobile subscriptions + booking history panel. */
+/** Mobile subscriptions + booking calendar panel. */
 const ContactSubscriptionsMobilePanel = ({
   contactId,
 }: {
@@ -209,12 +209,6 @@ const ContactSubscriptionsMobilePanel = ({
       filter: { "contact_id@eq": contactId },
       pagination: { page: 1, perPage: 50 },
       sort: { field: "purchased_at", order: "DESC" },
-    });
-  const { data: bookings = [], isPending: bookingsLoading } =
-    useGetList<Booking>("bookings", {
-      filter: { "contact_id@eq": contactId },
-      pagination: { page: 1, perPage: 50 },
-      sort: { field: "created_at", order: "DESC" },
     });
 
   return (
@@ -247,19 +241,7 @@ const ContactSubscriptionsMobilePanel = ({
           {translate("resources.bookings.panel.history")}
         </h3>
         <Separator className="my-2" />
-        {bookingsLoading && (
-          <p className="text-sm text-muted-foreground">
-            {translate("crm.common.loading")}
-          </p>
-        )}
-        {!bookingsLoading && bookings.length === 0 && (
-          <p className="text-sm text-muted-foreground">
-            {translate("resources.bookings.panel.empty")}
-          </p>
-        )}
-        {!bookingsLoading && bookings.length > 0 && (
-          <BookingHistoryList bookings={bookings} />
-        )}
+        <ContactBookingCalendar contactId={contactId} />
       </div>
     </div>
   );
@@ -281,6 +263,9 @@ const ContactShowContent = () => {
                   <RecordRepresentation />
                 </h5>
               </div>
+            </div>
+            <div className="mt-4">
+              <ContactBookingCalendar contactId={record.id} />
             </div>
             <InfiniteListBase
               resource="contact_notes"
