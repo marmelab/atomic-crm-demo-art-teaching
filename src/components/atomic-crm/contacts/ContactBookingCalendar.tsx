@@ -30,6 +30,31 @@ import { STATUS_CLASS } from "./BookingHistoryList";
 /** Maximum booking chips shown per day cell before collapsing into "+N more". */
 const MAX_VISIBLE_CHIPS = 3;
 
+/**
+ * Computes the combined loading state for the two-stage bookings → sessions
+ * fetch chain.
+ *
+ * The sessions query is conditionally enabled: it only fires when bookings are
+ * loaded AND the contact has at least one booking (`sessionsEnabled = true`).
+ * A disabled react-query query stays in `status: "pending"` indefinitely, so
+ * we must NOT include `sessionsPending` in the result when the query is not
+ * enabled — otherwise a contact with zero bookings would be stuck in the
+ * loading state forever.
+ *
+ * @param bookingsPending - True while the bookings list is still fetching.
+ * @param sessionsEnabled - Whether the sessions query was enabled (i.e. bookings
+ *   loaded and at least one session_id exists).
+ * @param sessionsPending - True while the sessions query is fetching.
+ * @returns True if either active query has not yet resolved.
+ */
+export function computeIsPending(
+  bookingsPending: boolean,
+  sessionsEnabled: boolean,
+  sessionsPending: boolean,
+): boolean {
+  return bookingsPending || (sessionsEnabled && sessionsPending);
+}
+
 /** Abbreviated weekday header labels (Mon–Sun). */
 const WEEKDAY_HEADERS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -113,6 +138,12 @@ export const ContactBookingCalendar = ({
     [bookings],
   );
 
+  // Only fire the sessions query when bookings are loaded AND there is at least
+  // one session to resolve. When a contact has zero bookings (sessionIds is
+  // empty) the query stays disabled, but we must NOT let its permanently-pending
+  // status propagate up — otherwise the loading spinner never clears.
+  const sessionsEnabled = !bookingsPending && sessionIds.length > 0;
+
   // Fetch only the sessions within the visible grid range — filtering server-side
   const {
     data: sessions = [],
@@ -128,11 +159,17 @@ export const ContactBookingCalendar = ({
       pagination: { page: 1, perPage: 500 },
       sort: { field: "starts_at", order: "ASC" },
     },
-    // Only fire when we have booking data so we know there are sessions to fetch
-    { enabled: !bookingsPending && sessionIds.length > 0 },
+    { enabled: sessionsEnabled },
   );
 
-  const isPending = bookingsPending || sessionsPending;
+  // When sessionsEnabled is false the query is never started and its status
+  // stays "pending" indefinitely — guard against that by ignoring sessionsPending
+  // when the query is not enabled (see computeIsPending for full rationale).
+  const isPending = computeIsPending(
+    bookingsPending,
+    sessionsEnabled,
+    sessionsPending,
+  );
   const error = bookingsError ?? sessionsError;
 
   // Index sessions by id for O(1) lookup

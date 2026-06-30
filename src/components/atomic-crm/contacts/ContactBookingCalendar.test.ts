@@ -1,15 +1,21 @@
 /**
- * Unit tests for ContactBookingCalendar's groupBookingsByDay helper.
+ * Unit tests for ContactBookingCalendar's pure helpers.
  *
- * Covers:
+ * groupBookingsByDay covers:
  * - A booking lands in the day cell matching its session's starts_at date.
  * - Multiple bookings on the same day are grouped together.
  * - Bookings whose session_id is not in the sessions map are skipped.
  * - The empty-month case: an empty bookings list produces an empty map.
+ *
+ * computeIsPending covers:
+ * - Zero-bookings month: sessionsEnabled=false → sessionsPending is ignored → not stuck.
+ * - Normal in-flight state: bookings loading → pending.
+ * - Normal in-flight state: bookings done, sessions loading → pending.
+ * - All done: both flags false → not pending.
  */
 
 import { describe, expect, it } from "vitest";
-import { groupBookingsByDay } from "./ContactBookingCalendar";
+import { groupBookingsByDay, computeIsPending } from "./ContactBookingCalendar";
 import type { Booking, Session } from "../types";
 
 // ---------------------------------------------------------------------------
@@ -124,5 +130,44 @@ describe("groupBookingsByDay", () => {
     // Assert
     const entry = result.get("2026-03-07")![0];
     expect(entry.dayKey).toBe("2026-03-07");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// computeIsPending
+// ---------------------------------------------------------------------------
+
+describe("computeIsPending", () => {
+  it("returns false when a contact has zero bookings (sessionsEnabled=false)", () => {
+    // Regression test: a disabled query stays in "pending" status forever in
+    // @tanstack/query-core. If we naively OR in sessionsPending when the sessions
+    // query is never started, a contact with no bookings gets stuck on the
+    // loading spinner indefinitely and the empty-state panel is never shown.
+    //
+    // Arrange: bookings finished loading (bookingsPending=false), no bookings
+    // exist so the sessions query is disabled (sessionsEnabled=false).
+    // Even though react-query reports sessionsPending=true for a disabled query,
+    // computeIsPending must return false.
+    expect(computeIsPending(false, false, true)).toBe(false);
+  });
+
+  it("returns true while the bookings query is still in-flight", () => {
+    // Arrange: bookings still loading — sessions query not yet enabled
+    expect(computeIsPending(true, false, false)).toBe(true);
+  });
+
+  it("returns true while the sessions query is in-flight (enabled)", () => {
+    // Arrange: bookings done, at least one booking exists, sessions loading
+    expect(computeIsPending(false, true, true)).toBe(true);
+  });
+
+  it("returns false when both active queries have resolved", () => {
+    // Arrange: bookings done, sessions done (or were never needed)
+    expect(computeIsPending(false, true, false)).toBe(false);
+  });
+
+  it("returns false when bookings done and sessions query is disabled and not pending", () => {
+    // Belt-and-suspenders: disabled query with sessionsPending=false
+    expect(computeIsPending(false, false, false)).toBe(false);
   });
 });
