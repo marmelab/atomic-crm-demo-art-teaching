@@ -21,7 +21,6 @@ export const SessionList = () => {
       pagination={false}
       sort={{ field: "starts_at", order: "ASC" }}
       filterDefaultValues={{ "starts_at@gte": now }}
-      className="flex-1 min-h-0"
     >
       <SessionCalendar />
     </List>

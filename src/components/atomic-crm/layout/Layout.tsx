@@ -10,12 +10,9 @@ import Header from "./Header";
 export const Layout = ({ children }: { children: ReactNode }) => {
   useConfigurationLoader();
   return (
-    <div className="flex flex-col h-dvh">
+    <>
       <Header />
-      <main
-        className="max-w-screen-xl mx-auto pt-4 px-4 flex-1 min-h-0 overflow-y-auto flex flex-col w-full"
-        id="main-content"
-      >
+      <main className="max-w-screen-xl mx-auto pt-4 px-4" id="main-content">
         <ErrorBoundary FallbackComponent={Error}>
           <Suspense fallback={<Skeleton className="h-12 w-12 rounded-full" />}>
             {children}
@@ -23,6 +20,6 @@ export const Layout = ({ children }: { children: ReactNode }) => {
         </ErrorBoundary>
       </main>
       <Notification />
-    </div>
+    </>
   );
 };
