@@ -110,7 +110,7 @@ export const SessionCalendar = () => {
   const monthWeeks = getMonthGrid(anchorDate);
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3 h-[calc(100vh-9rem)]">
       <CalendarToolbar
         viewMode={viewMode}
         periodLabel={periodLabel}
@@ -120,21 +120,23 @@ export const SessionCalendar = () => {
         onViewModeChange={setViewMode}
       />
 
-      {isPending ? (
-        <CalendarSkeleton />
-      ) : error ? (
-        <CalendarError
-          message={translate("resources.sessions.calendar.fetch_error")}
-        />
-      ) : viewMode === "week" ? (
-        <WeekView days={weekDays} sessionsByDay={sessionsByDay} />
-      ) : (
-        <MonthView
-          weeks={monthWeeks}
-          anchorDate={anchorDate}
-          sessionsByDay={sessionsByDay}
-        />
-      )}
+      <div className="flex-1 min-h-0">
+        {isPending ? (
+          <CalendarSkeleton />
+        ) : error ? (
+          <CalendarError
+            message={translate("resources.sessions.calendar.fetch_error")}
+          />
+        ) : viewMode === "week" ? (
+          <WeekView days={weekDays} sessionsByDay={sessionsByDay} />
+        ) : (
+          <MonthView
+            weeks={monthWeeks}
+            anchorDate={anchorDate}
+            sessionsByDay={sessionsByDay}
+          />
+        )}
+      </div>
     </div>
   );
 };
