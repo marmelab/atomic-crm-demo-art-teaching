@@ -37,7 +37,10 @@ export const SessionCalendar = () => {
     setViewMode,
   } = useCalendarState();
 
-  const { sessionsByDay, isPending } = useCalendarSessions(rangeStart, rangeEnd);
+  const { sessionsByDay, isPending } = useCalendarSessions(
+    rangeStart,
+    rangeEnd,
+  );
 
   const weeks = getMonthGrid(anchorDate);
 
@@ -72,7 +75,10 @@ export const SessionCalendar = () => {
           >
             <ChevronRight className="h-4 w-4" />
           </Button>
-          <span className="ml-2 text-sm font-semibold" data-testid="period-label">
+          <span
+            className="ml-2 text-sm font-semibold"
+            data-testid="period-label"
+          >
             {periodLabel}
           </span>
         </div>

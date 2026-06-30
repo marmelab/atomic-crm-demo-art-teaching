@@ -25,7 +25,8 @@ export function getCapacityColorClass(
   overbooking: number,
 ): string {
   const bookableMax = capacity + overbooking;
-  if (nbBooked >= bookableMax) return "bg-destructive text-white border-transparent";
+  if (nbBooked >= bookableMax)
+    return "bg-destructive text-white border-transparent";
   if (nbBooked >= capacity) return "bg-amber-500 text-white border-transparent";
   return "bg-green-600 text-white border-transparent";
 }

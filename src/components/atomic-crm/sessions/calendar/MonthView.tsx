@@ -39,7 +39,11 @@ interface MonthViewProps {
  * @param anchorDate - The focused month (determines muted padding cells).
  * @param sessionsByDay - Sessions grouped by yyyy-MM-dd key.
  */
-export const MonthView = ({ weeks, anchorDate, sessionsByDay }: MonthViewProps) => {
+export const MonthView = ({
+  weeks,
+  anchorDate,
+  sessionsByDay,
+}: MonthViewProps) => {
   return (
     <div
       className="flex flex-col overflow-hidden rounded-md border bg-background"
@@ -113,8 +117,7 @@ const DayCell = ({ day, anchorDate, sessionsByDay }: DayCellProps) => {
           className={cn(
             "flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold",
             !isCurrentMonth && "text-muted-foreground",
-            isTodayCell &&
-              "bg-primary text-primary-foreground",
+            isTodayCell && "bg-primary text-primary-foreground",
           )}
           aria-label={format(day, "MMMM d, yyyy")}
         >
