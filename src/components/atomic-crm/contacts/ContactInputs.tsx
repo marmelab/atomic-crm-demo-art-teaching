@@ -1,8 +1,4 @@
-import {
-  email,
-  required,
-  useTranslate,
-} from "ra-core";
+import { email, required, useTranslate } from "ra-core";
 import type { FocusEvent, ClipboardEventHandler } from "react";
 import { useFormContext } from "react-hook-form";
 import { Separator } from "@/components/ui/separator";

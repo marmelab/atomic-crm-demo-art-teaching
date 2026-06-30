@@ -39,10 +39,7 @@ export const NoteCreate = ({
       <Form>
         <div className={cn("space-y-3", className)}>
           <NoteInputs showStatus={showStatus} />
-          <NoteCreateButton
-            record={record}
-            reference={reference}
-          />
+          <NoteCreateButton record={record} reference={reference} />
         </div>
       </Form>
     </CreateBase>
