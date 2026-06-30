@@ -66,7 +66,6 @@ export type Contact = {
   tags: number[];
   gender: string;
   sales_id?: Identifier;
-  status: string;
   background: string;
   phone_jsonb: PhoneNumberAndType[];
   nb_tasks?: number;

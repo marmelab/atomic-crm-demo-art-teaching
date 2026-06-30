@@ -53,7 +53,6 @@ select
     co.first_seen,
     co.last_seen,
     co.has_newsletter,
-    co.status,
     co.tags,
     co.sales_id,
     co.linkedin_url,
