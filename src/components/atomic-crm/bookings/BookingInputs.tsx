@@ -1,4 +1,4 @@
-import { required } from "ra-core";
+import { required, useTranslate } from "ra-core";
 import { useWatch } from "react-hook-form";
 import { AutocompleteInput } from "@/components/admin/autocomplete-input";
 import { ReferenceInput } from "@/components/admin/reference-input";
@@ -18,7 +18,12 @@ interface BookingInputsProps {
  * The session_id is handled via the parent form's defaultValues.
  */
 export const BookingInputs = ({ contactId }: BookingInputsProps) => {
+  const translate = useTranslate();
   const { bookingTypes } = useConfigurationContext();
+  const translatedBookingTypes = bookingTypes.map((bt) => ({
+    ...bt,
+    label: translate(`resources.bookings.type.${bt.value}`, { _: bt.label }),
+  }));
   const type = useWatch({ name: "type" });
   // When contactId is fixed (e.g. from SessionShow) use it for subscription filter
   const watchedContactId = useWatch({ name: "contact_id" });
@@ -33,7 +38,7 @@ export const BookingInputs = ({ contactId }: BookingInputsProps) => {
       )}
       <SelectInput
         source="type"
-        choices={bookingTypes}
+        choices={translatedBookingTypes}
         optionText="label"
         optionValue="value"
         validate={required()}
