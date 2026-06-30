@@ -18,7 +18,6 @@ import { RotateCcw } from "lucide-react";
 import { formatRelativeDate } from "../misc/RelativeDate";
 import type { Contact } from "../types";
 import { Avatar } from "./Avatar";
-import { TagsList } from "./TagsList";
 
 export const ContactListContent = () => {
   const translate = useTranslate();
@@ -128,17 +127,11 @@ const ContactItemContent = ({
           <div className="font-medium">
             {`${contact.first_name} ${contact.last_name ?? ""}`}
           </div>
-          {contact.nb_tasks || contact.tags?.length ? (
+          {contact.nb_tasks ? (
             <div className="text-sm text-muted-foreground">
-              {contact.nb_tasks
-                ? translate("crm.common.task_count", {
-                    smart_count: contact.nb_tasks,
-                  })
-                : null}
-              {contact.nb_tasks && contact.tags?.length ? (
-                <>&nbsp;&nbsp;</>
-              ) : null}
-              <TagsList />
+              {translate("crm.common.task_count", {
+                smart_count: contact.nb_tasks,
+              })}
             </div>
           ) : null}
         </div>

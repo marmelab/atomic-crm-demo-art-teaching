@@ -1,7 +1,5 @@
-import { useDataProvider, useGetIdentity, type DataProvider } from "ra-core";
-import { useCallback, useMemo } from "react";
-
-import type { Tag } from "../types";
+import { useDataProvider, useGetIdentity } from "ra-core";
+import { useCallback } from "react";
 
 export type ContactImportSchema = {
   first_name: string;
@@ -18,7 +16,6 @@ export type ContactImportSchema = {
   first_seen: string;
   last_seen: string;
   has_newsletter: string;
-  tags: string;
   linkedin_url: string;
 };
 
@@ -27,29 +24,8 @@ export function useContactImport() {
   const user = useGetIdentity();
   const dataProvider = useDataProvider();
 
-  // Tags cache to avoid creating the same tag multiple times and costly roundtrips
-  // Cache is dependent of dataProvider, so it's safe to use it as a dependency
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const tagsCache = useMemo(() => new Map<string, Tag>(), [dataProvider]);
-  const getTags = useCallback(
-    async (names: string[]) =>
-      fetchRecordsWithCache<Tag>(
-        "tags",
-        tagsCache,
-        names,
-        (name) => ({
-          name,
-          color: "#f9f9f9",
-        }),
-        dataProvider,
-      ),
-    [tagsCache, dataProvider],
-  );
-
   const processBatch = useCallback(
     async (batch: ContactImportSchema[]) => {
-      const tags = await getTags(batch.flatMap((row) => parseTags(row.tags)));
-
       await Promise.all(
         batch.map(
           async ({
@@ -66,7 +42,6 @@ export function useContactImport() {
             first_seen,
             last_seen,
             has_newsletter,
-            tags: tagNames,
             linkedin_url,
           }) => {
             const email_jsonb = [
@@ -79,9 +54,6 @@ export function useContactImport() {
               { number: phone_home, type: "Home" },
               { number: phone_other, type: "Other" },
             ].filter(({ number }) => number);
-            const tagList = parseTags(tagNames)
-              .map((name) => tags.get(name))
-              .filter((tag): tag is Tag => !!tag);
 
             return dataProvider.create("contacts", {
               data: {
@@ -98,7 +70,6 @@ export function useContactImport() {
                   ? new Date(last_seen).toISOString()
                   : today,
                 has_newsletter,
-                tags: tagList.map((tag) => tag.id),
                 sales_id: user?.identity?.id,
                 linkedin_url,
               },
@@ -107,58 +78,8 @@ export function useContactImport() {
         ),
       );
     },
-    [dataProvider, getTags, user?.identity?.id, today],
+    [dataProvider, user?.identity?.id, today],
   );
 
   return processBatch;
 }
-
-const fetchRecordsWithCache = async function <T>(
-  resource: string,
-  cache: Map<string, T>,
-  names: string[],
-  getCreateData: (name: string) => Partial<T>,
-  dataProvider: DataProvider,
-) {
-  const trimmedNames = [...new Set(names.map((name) => name.trim()))];
-  const uncachedRecordNames = trimmedNames.filter((name) => !cache.has(name));
-
-  // check the backend for existing records
-  if (uncachedRecordNames.length > 0) {
-    const response = await dataProvider.getList(resource, {
-      filter: {
-        "name@in": `(${uncachedRecordNames
-          .map((name) => `"${name}"`)
-          .join(",")})`,
-      },
-      pagination: { page: 1, perPage: trimmedNames.length },
-      sort: { field: "id", order: "ASC" },
-    });
-    for (const record of response.data) {
-      cache.set(record.name.trim(), record);
-    }
-  }
-
-  // create missing records in parallel
-  await Promise.all(
-    uncachedRecordNames.map(async (name) => {
-      if (cache.has(name)) return;
-      const response = await dataProvider.create(resource, {
-        data: getCreateData(name),
-      });
-      cache.set(name, response.data);
-    }),
-  );
-
-  // now all records are in cache, return a map of all records
-  return trimmedNames.reduce((acc, name) => {
-    acc.set(name, cache.get(name) as T);
-    return acc;
-  }, new Map<string, T>());
-};
-
-const parseTags = (tags: string) =>
-  tags
-    ?.split(",")
-    ?.map((tag: string) => tag.trim())
-    ?.filter((tag: string) => tag) ?? [];

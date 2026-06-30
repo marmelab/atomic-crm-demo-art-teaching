@@ -16,7 +16,7 @@ import { SelectAllButton } from "@/components/admin/select-all-button";
 import { SortButton } from "@/components/admin/sort-button";
 import { Card } from "@/components/ui/card";
 
-import type { Contact, Sale, Tag } from "../types";
+import type { Contact, Sale } from "../types";
 import { BulkTagButton } from "./BulkTagButton";
 import { ContactEmpty } from "./ContactEmpty";
 import { ContactImportButton } from "./ContactImportButton";
@@ -140,7 +140,6 @@ const ContactListLayoutMobile = () => {
 
 const exporter: Exporter<Contact> = async (records, fetchRelatedRecords) => {
   const sales = await fetchRelatedRecords<Sale>(records, "sales_id", "sales");
-  const tags = await fetchRelatedRecords<Tag>(records, "tags", "tags");
 
   const contacts = records.map((contact) => {
     const exportedContact = {
@@ -149,7 +148,6 @@ const exporter: Exporter<Contact> = async (records, fetchRelatedRecords) => {
         contact.sales_id != null
           ? `${sales[contact.sales_id].first_name} ${sales[contact.sales_id].last_name}`
           : undefined,
-      tags: contact.tags.map((tagId) => tags[tagId].name).join(", "),
       email_work: contact.email_jsonb?.find((email) => email.type === "Work")
         ?.email,
       email_home: contact.email_jsonb?.find((email) => email.type === "Home")
