@@ -44,15 +44,17 @@ export const BookingInputs = ({ contactId }: BookingInputsProps) => {
           <AutocompleteInput validate={required()} helperText={false} />
         </ReferenceInput>
       )}
-      <SelectInput
-        source="type"
-        choices={translatedBookingTypes}
-        optionText="label"
-        optionValue="value"
-        validate={required()}
-        helperText={false}
-      />
-      {type === "subscription" && (
+      {effectiveContactId && (
+        <SelectInput
+          source="type"
+          choices={translatedBookingTypes}
+          optionText="label"
+          optionValue="value"
+          validate={required()}
+          helperText={false}
+        />
+      )}
+      {effectiveContactId && type === "subscription" && (
         <ReferenceInput
           source="subscription_id"
           reference="subscriptions"

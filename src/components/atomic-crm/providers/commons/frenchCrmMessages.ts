@@ -315,7 +315,7 @@ export const frenchCrmMessages = {
       fields: {
         session_id: "Séance",
         contact_id: "Élève",
-        subscription_id: "Abonnement",
+        subscription_id: "Séances prépayées",
         type: "Type de réservation",
         status: "Statut",
         cancelled_at: "Annulé le",
