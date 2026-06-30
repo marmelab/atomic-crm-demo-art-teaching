@@ -352,6 +352,13 @@ export const frenchCrmMessages = {
         history: "Historique des réservations",
         empty: "Aucune réservation pour l'instant",
       },
+      calendar: {
+        prev: "Mois précédent",
+        next: "Mois suivant",
+        today: "Aujourd'hui",
+        empty: "Aucune réservation ce mois-ci",
+        error: "Impossible de charger les réservations. Veuillez réessayer.",
+      },
     },
   },
   crm: {

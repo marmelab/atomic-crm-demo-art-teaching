@@ -8,7 +8,7 @@ interface BookingHistoryListProps {
 }
 
 /** Maps booking status to a compact badge colour class. */
-const STATUS_CLASS: Record<BookingStatus, string> = {
+export const STATUS_CLASS: Record<BookingStatus, string> = {
   booked: "bg-blue-50 text-blue-700 border-blue-200",
   attended: "bg-green-50 text-green-700 border-green-200",
   no_show: "bg-yellow-50 text-yellow-700 border-yellow-200",

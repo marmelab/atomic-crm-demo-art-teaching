@@ -346,6 +346,13 @@ export const englishCrmMessages = {
         history: "Booking history",
         empty: "No bookings yet",
       },
+      calendar: {
+        prev: "Previous month",
+        next: "Next month",
+        today: "Today",
+        empty: "No bookings this month",
+        error: "Unable to load bookings. Please try again.",
+      },
     },
   },
   crm: {
