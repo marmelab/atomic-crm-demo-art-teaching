@@ -304,6 +304,13 @@ export const englishCrmMessages = {
         title: "Roster",
         placeholder: "Student roster will appear here once bookings are added.",
       },
+      calendar: {
+        title: "Calendar",
+        today: "Today",
+        prev_week: "Previous week",
+        next_week: "Next week",
+        hour_gutter: "Hour labels",
+      },
     },
     bookings: {
       name: "Booking |||| Bookings",
