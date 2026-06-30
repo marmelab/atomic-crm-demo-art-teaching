@@ -144,8 +144,7 @@ describe("getWeekRange", () => {
 
   it("end is exactly 7 days after start", () => {
     const [start, end] = getWeekRange(new Date("2025-06-15"));
-    const diffDays =
-      (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24);
+    const diffDays = (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24);
     expect(diffDays).toBe(7);
   });
 });

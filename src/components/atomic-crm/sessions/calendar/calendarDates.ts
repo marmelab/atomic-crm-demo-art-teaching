@@ -113,10 +113,7 @@ export function toCalendarDayKey(date: Date): CalendarDayKey {
  * @param anchor - Current focused date.
  * @param mode - "week" or "month".
  */
-export function prevPeriodAnchor(
-  anchor: Date,
-  mode: "week" | "month",
-): Date {
+export function prevPeriodAnchor(anchor: Date, mode: "week" | "month"): Date {
   return mode === "week" ? subWeeks(anchor, 1) : subMonths(anchor, 1);
 }
 
@@ -126,9 +123,6 @@ export function prevPeriodAnchor(
  * @param anchor - Current focused date.
  * @param mode - "week" or "month".
  */
-export function nextPeriodAnchor(
-  anchor: Date,
-  mode: "week" | "month",
-): Date {
+export function nextPeriodAnchor(anchor: Date, mode: "week" | "month"): Date {
   return mode === "week" ? addWeeks(anchor, 1) : addMonths(anchor, 1);
 }

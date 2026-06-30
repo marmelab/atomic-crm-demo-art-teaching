@@ -93,9 +93,7 @@ export function useCalendarState(): CalendarState {
   const anchorDate = parseAnchorDate(searchParams.get(PARAM_DATE));
 
   const [rangeStart, rangeEnd] =
-    viewMode === "week"
-      ? getWeekRange(anchorDate)
-      : getMonthRange(anchorDate);
+    viewMode === "week" ? getWeekRange(anchorDate) : getMonthRange(anchorDate);
 
   /** Writes new view + date params while preserving unrelated search params. */
   const navigate = useCallback(
