@@ -301,6 +301,7 @@ export const englishCrmMessages = {
         view_month: "Month",
         view_toggle_label: "Calendar view",
         fetch_error: "Unable to load sessions. Please try again.",
+        teacher: "Teacher",
       },
     },
     bookings: {
