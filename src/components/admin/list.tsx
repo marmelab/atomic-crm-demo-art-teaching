@@ -157,7 +157,9 @@ export const ListView = <RecordType extends RaRecord = RaRecord>(
         </div>
         <FilterForm />
 
-        <div className={cn("my-2 flex-1 min-h-0", props.className)}>{children}</div>
+        <div className={cn("my-2 flex-1 min-h-0", props.className)}>
+          {children}
+        </div>
         {pagination}
       </FilterContext.Provider>
     </>
