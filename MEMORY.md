@@ -4,6 +4,7 @@ Durable Atomic CRM knowledge. One sentence per bullet, freshest first. Maintaine
 
 ## Business Knowledge
 
+- The `tags` field (a `bigint[]` array on the `contacts` table) was fully removed — tag assignment on contacts is not relevant for the drawing-teacher use case; the `tags` resource itself is still present but no longer linked to contacts.
 - The `status` field was removed from the `contacts` table (schema, type, CSV export, list filter, aside panel, note creation flow) — contact status tracking is not relevant for the drawing-teacher use case.
 - The sessions list page defaults to a calendar view (week or month); the legacy DataTable is a secondary fallback toggled via `?display=list` in the URL.
 - A dedicated `/sessions/calendar` route renders a full-page calendar (`CalendarPage`) accessible from the Header navigation alongside the sessions list tab.
