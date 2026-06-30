@@ -310,6 +310,13 @@ export const frenchCrmMessages = {
         placeholder:
           "La liste des participants apparaîtra ici une fois les réservations ajoutées.",
       },
+      calendar: {
+        title: "Calendrier",
+        today: "Aujourd'hui",
+        prev_week: "Semaine précédente",
+        next_week: "Semaine suivante",
+        hour_gutter: "Étiquettes des heures",
+      },
     },
     bookings: {
       name: "Réservation |||| Réservations",
