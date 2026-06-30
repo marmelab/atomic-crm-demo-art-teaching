@@ -11,13 +11,13 @@
 --
 -- contacts_summary has no dependent views in this schema.
 
--- 1. Drop the tags column from contacts
-ALTER TABLE public.contacts DROP COLUMN IF EXISTS tags;
-
--- 2. Recreate contacts_summary without co.tags and co.status
---    (column removal requires DROP + CREATE; no dependents).
+-- 1. Drop contacts_summary view first (it depends on the tags column)
 DROP VIEW IF EXISTS public.contacts_summary;
 
+-- 2. Drop the tags column from contacts
+ALTER TABLE public.contacts DROP COLUMN IF EXISTS tags;
+
+-- 3. Recreate contacts_summary without co.tags and co.status
 CREATE VIEW public.contacts_summary WITH (security_invoker = on) AS
 SELECT
     co.id,
@@ -48,7 +48,7 @@ GRANT ALL ON TABLE public.contacts_summary TO anon;
 GRANT ALL ON TABLE public.contacts_summary TO authenticated;
 GRANT ALL ON TABLE public.contacts_summary TO service_role;
 
--- 3. Update merge_contacts to remove tags merging logic
+-- 4. Update merge_contacts to remove tags merging logic
 CREATE OR REPLACE FUNCTION "public"."merge_contacts"("loser_id" bigint, "winner_id" bigint) RETURNS bigint
     LANGUAGE "plpgsql"
     SET "search_path" TO 'public'
