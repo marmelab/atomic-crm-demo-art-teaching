@@ -55,7 +55,6 @@ import { MobileTasksList } from "../tasks/MobileTasksList.tsx";
 import { ContactListMobile } from "../contacts/ContactList.tsx";
 import { ContactShow } from "../contacts/ContactShow.tsx";
 import { NoteShowPage } from "../notes/NoteShowPage.tsx";
-import { CalendarPage } from "../sessions/calendar/CalendarPage.tsx";
 
 const defaultStore = localStorageStore(undefined, "CRM");
 
@@ -244,7 +243,6 @@ const DesktopAdmin = (
         <Route path={SettingsPage.path} element={<SettingsPage />} />
         <Route path={ImportPage.path} element={<ImportPage />} />
         <Route path={ChangelogPage.path} element={<ChangelogPage />} />
-        <Route path="/sessions/calendar" element={<CalendarPage />} />
       </CustomRoutes>
       <Resource name="contacts" {...contacts} />
       <Resource name="subscriptions" {...subscriptions} />
