@@ -4,6 +4,9 @@ Durable Atomic CRM knowledge. One sentence per bullet, freshest first. Maintaine
 
 ## Business Knowledge
 
+- The sessions list page defaults to a calendar view (week or month); the legacy DataTable is a secondary fallback toggled via `?display=list` in the URL.
+- A dedicated `/sessions/calendar` route renders a full-page calendar (`CalendarPage`) accessible from the Header navigation alongside the sessions list tab.
+- Calendar view state (week/month mode and anchor date) is persisted in URL search params (`?view=week|month&date=yyyy-MM-dd`) so a page refresh restores the same period.
 - The app was repurposed from a generic CRM into a drawing-teacher management tool; contacts are students (Élèves), and companies/deals were removed entirely.
 - Three new resources were added: sessions (scheduled classes), subscriptions (prepaid session packs), and bookings (junction between students and sessions).
 - A session has `capacity` (default 15) and `overbooking` (default 2) columns; the DB trigger `check_session_capacity` blocks inserts/updates when live (non-cancelled) bookings reach `capacity + overbooking` (17).
