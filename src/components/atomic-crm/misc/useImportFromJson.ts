@@ -9,8 +9,7 @@ import {
 import { JSONParser, type JsonTypes } from "@streamparser/json-whatwg";
 import mime from "mime/lite";
 import type { CrmDataProvider } from "../providers/types";
-import type { RAFile, Tag } from "../types";
-import { colors } from "../tags/colors";
+import type { RAFile } from "../types";
 import { contactGender } from "../contacts/contactModel";
 
 export type ImportFromJsonStats = {
@@ -124,11 +123,9 @@ export const useImportFromJson = (): [
     const idsMaps: {
       sales: Record<number, Identifier>;
       contacts: Record<number, Identifier>;
-      tags: Record<string, Identifier>;
     } = {
       sales: {},
       contacts: {},
-      tags: {},
     };
 
     const importSale = async (
@@ -239,25 +236,6 @@ export const useImportFromJson = (): [
           return;
         }
 
-        let tagsIds: Array<Identifier> = [];
-        if (dataToImport.tags && Array.isArray(dataToImport.tags)) {
-          tagsIds = await Promise.all(
-            dataToImport.tags.map(async (tag) => {
-              if (idsMaps.tags[tag]) {
-                return idsMaps.tags[tag];
-              }
-              const { data } = await dataProvider.create<Tag>("tags", {
-                data: {
-                  name: tag,
-                  color: colors[Math.floor(Math.random() * colors.length)],
-                },
-              });
-              idsMaps.tags[tag] = data.id;
-              return data.id;
-            }),
-          );
-        }
-
         const { data } = await dataProvider.create("contacts", {
           data: {
             last_name: dataToImport.last_name.trim(),
@@ -276,7 +254,6 @@ export const useImportFromJson = (): [
             sales_id: dataToImport.sales_id
               ? idsMaps.sales[dataToImport.sales_id]
               : currentSale.id,
-            tags: tagsIds,
             first_seen: dataToImport.created_at,
             last_seen: dataToImport.updated_at,
           },
@@ -607,7 +584,6 @@ type ContactImport = {
   has_newsletter?: boolean;
   emails: Array<{ email: string; type: string }>;
   phones: Array<{ number: string; type: string }>;
-  tags: Array<string>;
   created_at?: string;
   updated_at?: string;
 };
