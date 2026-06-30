@@ -10,5 +10,5 @@ export default {
   edit: SubscriptionEdit,
   create: SubscriptionCreate,
   recordRepresentation: (record: SubscriptionSummary) =>
-    `Subscription #${record.id}`,
+    `Séance prépayée #${record.id}`,
 };
