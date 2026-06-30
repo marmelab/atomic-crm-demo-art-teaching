@@ -4,6 +4,7 @@ import { AutocompleteInput } from "@/components/admin/autocomplete-input";
 import { ReferenceInput } from "@/components/admin/reference-input";
 import { SelectInput } from "@/components/admin/select-input";
 
+import type { SubscriptionSummary } from "../types";
 import { useConfigurationContext } from "../root/ConfigurationContext";
 
 interface BookingInputsProps {
@@ -28,6 +29,13 @@ export const BookingInputs = ({ contactId }: BookingInputsProps) => {
   // When contactId is fixed (e.g. from SessionShow) use it for subscription filter
   const watchedContactId = useWatch({ name: "contact_id" });
   const effectiveContactId = contactId ?? watchedContactId;
+
+  const formatSubscriptionOption = (record: SubscriptionSummary) => {
+    const purchaseDate = record.purchased_at
+      ? new Date(record.purchased_at).toLocaleDateString()
+      : "";
+    return `${record.sessions_remaining} ${translate("resources.subscriptions.fields.sessions_remaining")} (${translate("resources.subscriptions.fields.purchased_at")}: ${purchaseDate})`;
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -57,7 +65,11 @@ export const BookingInputs = ({ contactId }: BookingInputsProps) => {
               : { "sessions_remaining@gt": 0 }
           }
         >
-          <AutocompleteInput helperText={false} />
+          <AutocompleteInput
+            helperText={false}
+            optionText={formatSubscriptionOption}
+            disabled={!effectiveContactId}
+          />
         </ReferenceInput>
       )}
     </div>
