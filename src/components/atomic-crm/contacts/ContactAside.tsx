@@ -9,12 +9,11 @@ import { TasksIterator } from "../tasks/TasksIterator";
 import { ContactPersonalInfo } from "./ContactPersonalInfo";
 import { ContactBackgroundInfo } from "./ContactBackgroundInfo";
 import { AsideSection } from "../misc/AsideSection";
-import type { Booking, Contact, SubscriptionSummary } from "../types";
+import type { Contact, SubscriptionSummary } from "../types";
 import { ContactMergeButton } from "./ContactMergeButton";
 import { ExportVCardButton } from "./ExportVCardButton";
 import { BuyPackDialog } from "../bookings/BookingCreate";
 import { SubscriptionListItem } from "./SubscriptionListItem";
-import { BookingHistoryList } from "./BookingHistoryList";
 
 export const ContactAside = ({ link = "edit" }: { link?: "edit" | "show" }) => {
   const record = useRecordContext<Contact>();
@@ -62,10 +61,6 @@ export const ContactAside = ({ link = "edit" }: { link?: "edit" | "show" }) => {
         title={translate("resources.subscriptions.name", { smart_count: 2 })}
       >
         <ContactSubscriptionsPanel contactId={record.id} />
-      </AsideSection>
-
-      <AsideSection title={translate("resources.bookings.panel.history")} noGap>
-        <ContactBookingsPanel contactId={record.id} />
       </AsideSection>
 
       {link !== "edit" && (
@@ -121,32 +116,3 @@ const ContactSubscriptionsPanel = ({
   );
 };
 
-/** Booking history panel: lists all bookings for this student. */
-const ContactBookingsPanel = ({
-  contactId,
-}: {
-  contactId: string | number;
-}) => {
-  const translate = useTranslate();
-  const { data: bookings = [], isPending } = useGetList<Booking>("bookings", {
-    filter: { "contact_id@eq": contactId },
-    pagination: { page: 1, perPage: 50 },
-    sort: { field: "created_at", order: "DESC" },
-  });
-
-  return (
-    <div className="space-y-1">
-      {isPending && (
-        <p className="text-muted-foreground text-xs">
-          {translate("crm.common.loading")}
-        </p>
-      )}
-      {!isPending && bookings.length === 0 && (
-        <p className="text-muted-foreground text-xs">
-          {translate("resources.bookings.panel.empty")}
-        </p>
-      )}
-      {!isPending && <BookingHistoryList bookings={bookings} />}
-    </div>
-  );
-};
