@@ -80,4 +80,3 @@ export const DesktopError = () => (
     </ResourceContextProvider>
   </StoryWrapper>
 );
-

@@ -51,5 +51,4 @@ describe("ContactList", () => {
       .element(screen.getByText("Error loading students"))
       .toBeVisible();
   });
-
 });
