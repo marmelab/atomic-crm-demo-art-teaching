@@ -95,8 +95,7 @@ function layoutColumn(
 
   // Sort by start time
   const sorted = [...sessions].sort(
-    (a, b) =>
-      new Date(a.starts_at).getTime() - new Date(b.starts_at).getTime(),
+    (a, b) => new Date(a.starts_at).getTime() - new Date(b.starts_at).getTime(),
   );
 
   /** Each active lane tracks the end time (ms) of the session occupying it. */

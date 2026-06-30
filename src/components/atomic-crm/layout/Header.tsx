@@ -72,9 +72,7 @@ const Header = () => {
                     isActive={currentPath === "/sessions"}
                   />
                   <NavigationTab
-                    label={translate(
-                      "resources.sessions.calendar.title",
-                    )}
+                    label={translate("resources.sessions.calendar.title")}
                     to="/sessions/calendar"
                     isActive={currentPath === "/sessions/calendar"}
                   />
