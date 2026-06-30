@@ -99,3 +99,71 @@ test.describe("Sessions calendar week view", () => {
     expect(todayLabel).toBe(initialLabel);
   });
 });
+
+/**
+ * Session calendar — month view e2e spec.
+ *
+ * Verifies that:
+ * 1. Switching to the Calendar display mode shows the month view grid.
+ * 2. A seeded session appears as a chip in the correct day cell.
+ * 3. Clicking the chip navigates to the session show page.
+ */
+test.describe("Session calendar — month view", () => {
+  test("shows the month grid and a seeded session chip in the correct day cell", async ({
+    page,
+    createUser,
+    createSession,
+  }) => {
+    // --- Arrange ---
+    const user = await createUser({
+      email: "teacher@school.example",
+      password: "password",
+    });
+
+    // Seed a session for today at 09:00 so its day cell is predictable.
+    const today = new Date();
+    today.setHours(9, 0, 0, 0);
+    const startsAt = today.toISOString();
+
+    await createSession({
+      starts_at: startsAt,
+      duration_minutes: 60,
+      sales_id: user.id,
+    });
+
+    // --- Act: log in and navigate to Sessions ---
+    await page.goto("/");
+    await page.getByLabel("Email").fill("teacher@school.example");
+    await page.getByLabel("Password").fill("password");
+    await page.getByRole("button", { name: "Sign in" }).click();
+
+    await page.getByRole("link", { name: "Sessions" }).click();
+
+    // Switch to Calendar display mode
+    await page.getByTestId("display-calendar-button").click();
+
+    // The calendar defaults to week view — switch to month view
+    await page.getByTestId("month-view-button").click();
+
+    // --- Assert: month grid is visible ---
+    await expect(page.getByTestId("month-view")).toBeVisible();
+
+    // The day cell matching today should contain the session chip
+    const pad = (n: number) => String(n).padStart(2, "0");
+    const todayKey = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
+    const todayCell = page.getByTestId(`day-cell-${todayKey}`);
+
+    await expect(todayCell).toBeVisible();
+
+    // At least one session chip should be visible in today's cell
+    const chip = todayCell.getByTestId("session-chip").first();
+    await expect(chip).toBeVisible();
+
+    // Chip text includes the start time (09:00)
+    await expect(chip).toContainText("09:00");
+
+    // Clicking the chip navigates to the session show page
+    await chip.click();
+    await expect(page.getByTestId("capacity-badge")).toBeVisible();
+  });
+});
