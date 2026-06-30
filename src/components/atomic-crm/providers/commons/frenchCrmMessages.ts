@@ -244,8 +244,8 @@ export const frenchCrmMessages = {
       },
     },
     subscriptions: {
-      name: "Abonnement |||| Abonnements",
-      forcedCaseName: "Abonnement",
+      name: "Séance prépayée |||| Séances prépayées",
+      forcedCaseName: "Séance prépayée",
       fields: {
         contact_id: "Élève",
         total_sessions: "Séances totales",
@@ -334,7 +334,7 @@ export const frenchCrmMessages = {
       },
       action: {
         add_student: "Ajouter un élève",
-        buy_pack: "Acheter un pack",
+        buy_pack: "Ajouter des séances prépayées",
         mark_attended: "Présent",
         mark_no_show: "Absent",
         cancel: "Annuler",
