@@ -105,7 +105,7 @@ const DayCell = ({ day, anchorDate, sessionsByDay }: DayCellProps) => {
   return (
     <div
       className={cn(
-        "min-h-[80px] border-r p-1 last:border-r-0 flex flex-col",
+        "overflow-hidden border-r p-1 last:border-r-0 flex flex-col",
         !isCurrentMonth && "bg-muted/40",
         isTodayCell && "bg-primary/5",
       )}
