@@ -307,9 +307,15 @@ export const englishCrmMessages = {
       calendar: {
         title: "Calendar",
         today: "Today",
+        prev: "Previous period",
+        next: "Next period",
         prev_week: "Previous week",
         next_week: "Next week",
         hour_gutter: "Hour labels",
+        view_week: "Week",
+        view_month: "Month",
+        view_toggle_label: "Calendar view",
+        fetch_error: "Unable to load sessions. Please try again.",
       },
     },
     bookings: {

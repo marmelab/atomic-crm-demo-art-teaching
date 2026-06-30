@@ -1,31 +1,88 @@
 /**
- * Session calendar container.
+ * SessionCalendar — unified calendar container for sessions.
  *
- * Orchestrates the calendar views for scheduled classes:
- * - Reads URL search params (?view=month|week, ?date=yyyy-MM-dd) via useCalendarState.
- * - Fetches sessions for the visible range via useCalendarSessions.
- * - Renders MonthView when view=month; falls back to a placeholder when view=week
- *   (WeekView will be implemented in a separate ticket).
+ * Orchestrates:
+ *   - useCalendarState  → URL-driven view mode + anchor date + navigation
+ *   - useCalendarSessions → range-bounded fetch, groups sessions by day
+ *   - CalendarToolbar   → period navigation, week/month toggle, New session CTA
+ *   - WeekView          → 7-column time grid (view=week)
+ *   - MonthView         → month grid with session chips (view=month)
  *
- * Navigation controls (Prev / Next / Today) and a view-mode toggle are shown
- * above the grid.
+ * Loading state: renders a non-blocking skeleton placeholder.
+ * Error state:   renders a friendly inline error message (no blank screen).
+ *
+ * Toggling the view or navigating updates URL search params (?view=, ?date=)
+ * via useCalendarState — the component re-renders reactively.
  */
 
 import { format } from "date-fns";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useTranslate } from "ra-core";
 
-import { Button } from "@/components/ui/button";
-
-import { getMonthGrid } from "./calendarDates";
+import { CalendarToolbar } from "./CalendarToolbar";
+import { WeekView } from "./WeekView";
+import { MonthView } from "./MonthView";
 import { useCalendarState } from "./useCalendarState";
 import { useCalendarSessions } from "./useCalendarSessions";
-import { MonthView } from "./MonthView";
+import { getWeekDays, getMonthGrid } from "./calendarDates";
 
 /**
- * Top-level calendar component.  Mount inside the sessions list page to add
- * the calendar view alongside the table list.
+ * Formats a human-readable label for the current week range.
+ * Example: "Jun 30 – Jul 6, 2026"
+ *
+ * @param rangeStart - Inclusive start of the week range.
+ * @param rangeEnd   - Exclusive end of the week range (last day + 1).
+ */
+function formatWeekLabel(rangeStart: Date, rangeEnd: Date): string {
+  // rangeEnd is exclusive; the last displayed day is rangeEnd - 1 day
+  const lastDay = new Date(rangeEnd.getTime() - 24 * 60 * 60 * 1000);
+
+  const startMonth = format(rangeStart, "MMM");
+  const endMonth = format(lastDay, "MMM");
+  const year = format(lastDay, "yyyy");
+
+  if (startMonth === endMonth) {
+    return `${startMonth} ${format(rangeStart, "d")} – ${format(lastDay, "d")}, ${year}`;
+  }
+  return `${startMonth} ${format(rangeStart, "d")} – ${endMonth} ${format(lastDay, "d")}, ${year}`;
+}
+
+/**
+ * Skeleton placeholder shown while sessions are loading.
+ * Maintains the toolbar height so the layout does not shift.
+ */
+const CalendarSkeleton = () => (
+  <div
+    className="flex h-96 items-center justify-center rounded-md border border-dashed text-sm text-muted-foreground"
+    data-testid="calendar-skeleton"
+    aria-busy="true"
+    aria-label="Loading calendar…"
+  >
+    <span className="animate-pulse">Loading…</span>
+  </div>
+);
+
+/**
+ * Inline error message shown when the sessions fetch fails.
+ */
+const CalendarError = ({ message }: { message: string }) => (
+  <div
+    className="flex h-48 items-center justify-center rounded-md border border-destructive/30 bg-destructive/5 text-sm text-destructive"
+    data-testid="calendar-error"
+    role="alert"
+  >
+    {message}
+  </div>
+);
+
+/**
+ * Unified sessions calendar — week or month view, URL-driven state.
+ *
+ * Render this inside the sessions list page body.  The toolbar is self-contained
+ * so the parent (SessionList) does not need to manage calendar state.
  */
 export const SessionCalendar = () => {
+  const translate = useTranslate();
+
   const {
     viewMode,
     anchorDate,
@@ -37,95 +94,46 @@ export const SessionCalendar = () => {
     setViewMode,
   } = useCalendarState();
 
-  const { sessionsByDay, isPending } = useCalendarSessions(
+  const { sessionsByDay, isPending, error } = useCalendarSessions(
     rangeStart,
     rangeEnd,
   );
 
-  const weeks = getMonthGrid(anchorDate);
-
-  // Header label: "June 2025" for month mode
+  // Compute period label for the toolbar
   const periodLabel =
     viewMode === "month"
       ? format(anchorDate, "MMMM yyyy")
-      : `Week of ${format(rangeStart, "MMM d, yyyy")}`;
+      : formatWeekLabel(rangeStart, rangeEnd);
+
+  // Pre-compute view data (cheap — just date arithmetic)
+  const weekDays = getWeekDays(rangeStart);
+  const monthWeeks = getMonthGrid(anchorDate);
 
   return (
-    <div className="flex flex-col gap-3 p-2">
-      {/* Toolbar */}
-      <div className="flex items-center justify-between gap-2">
-        {/* Navigation */}
-        <div className="flex items-center gap-1">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={goToPrev}
-            aria-label="Previous period"
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <Button variant="outline" size="sm" onClick={goToToday}>
-            Today
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={goToNext}
-            aria-label="Next period"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-          <span
-            className="ml-2 text-sm font-semibold"
-            data-testid="period-label"
-          >
-            {periodLabel}
-          </span>
-        </div>
+    <div className="flex flex-col gap-3 mt-2">
+      <CalendarToolbar
+        viewMode={viewMode}
+        periodLabel={periodLabel}
+        onPrev={goToPrev}
+        onNext={goToNext}
+        onToday={goToToday}
+        onViewModeChange={setViewMode}
+      />
 
-        {/* View mode toggle */}
-        <div className="flex items-center rounded-md border">
-          <Button
-            variant={viewMode === "week" ? "default" : "ghost"}
-            size="sm"
-            className="rounded-r-none border-r"
-            onClick={() => setViewMode("week")}
-            aria-pressed={viewMode === "week"}
-          >
-            Week
-          </Button>
-          <Button
-            variant={viewMode === "month" ? "default" : "ghost"}
-            size="sm"
-            className="rounded-l-none"
-            onClick={() => setViewMode("month")}
-            aria-pressed={viewMode === "month"}
-            data-testid="month-view-button"
-          >
-            Month
-          </Button>
-        </div>
-      </div>
-
-      {/* View */}
       {isPending ? (
-        <div className="flex h-48 items-center justify-center text-sm text-muted-foreground">
-          Loading…
-        </div>
-      ) : viewMode === "month" ? (
+        <CalendarSkeleton />
+      ) : error ? (
+        <CalendarError
+          message={translate("resources.sessions.calendar.fetch_error")}
+        />
+      ) : viewMode === "week" ? (
+        <WeekView days={weekDays} sessionsByDay={sessionsByDay} />
+      ) : (
         <MonthView
-          weeks={weeks}
+          weeks={monthWeeks}
           anchorDate={anchorDate}
           sessionsByDay={sessionsByDay}
         />
-      ) : (
-        // Week view placeholder — will be implemented in a subsequent ticket
-        <div
-          className="flex h-48 items-center justify-center rounded-md border text-sm text-muted-foreground"
-          data-testid="week-view-placeholder"
-        >
-          Week view coming soon
-        </div>
       )}
     </div>
   );
