@@ -3,7 +3,6 @@ import { render } from "vitest-browser-react";
 import {
   DesktopEmpty,
   DesktopSuccess,
-  DesktopLoading,
   DesktopError,
 } from "./ContactList.stories";
 
@@ -30,17 +29,6 @@ describe("ContactList", () => {
     await expect
       .element(screen.getByRole("heading", { name: "No students found" }))
       .not.toBeInTheDocument();
-  });
-
-  /**
-   * The desktop version doesn't show a skeleton yet
-   */
-  it.skip("renders a skeleton while loading", async () => {
-    const screen = await render(<DesktopLoading />);
-
-    await expect
-      .poll(() => screen.container.querySelector('[data-slot="skeleton"]'))
-      .not.toBeNull();
   });
 
   it("renders an error notification when loading contacts fails", async () => {
