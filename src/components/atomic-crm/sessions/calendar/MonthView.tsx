@@ -46,7 +46,7 @@ export const MonthView = ({
 }: MonthViewProps) => {
   return (
     <div
-      className="flex flex-1 flex-col overflow-hidden rounded-md border bg-background"
+      className="flex flex-col rounded-md border bg-background"
       data-testid="month-view"
     >
       {/* Weekday header row */}
