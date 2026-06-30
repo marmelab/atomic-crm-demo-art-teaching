@@ -1,22 +1,23 @@
-import { useSearchParams } from "react-router";
 import { CreateButton } from "@/components/admin/create-button";
 import { DataTable } from "@/components/admin/data-table";
 import { DateField } from "@/components/admin/date-field";
 import { List } from "@/components/admin/list";
 import { Button } from "@/components/ui/button";
+import { useSearchParams } from "react-router";
 
 import { TopToolbar } from "../layout/TopToolbar";
 import { CapacityBadge } from "./CapacityBadge";
 import { SessionCalendar } from "./calendar/SessionCalendar";
 import type { SessionSummary } from "../types";
 
-/** URL param that selects the display mode ("list" or "calendar"). Separate from ?view= (week/month). */
+/** URL param that selects the display mode ("calendar" or "list"). */
 const DISPLAY_PARAM = "display";
 
 /**
- * Top toolbar for the session list.
+ * Top toolbar for the session list view.
  *
- * Shows a "List / Calendar" toggle and the "New session" create button.
+ * Shows a "Calendar / List" toggle and the "New session" create button.
+ * The Calendar mode is the default; List is the fallback for table-based access.
  */
 const SessionListActions = ({
   displayMode,
@@ -29,23 +30,24 @@ const SessionListActions = ({
     {/* Display-mode toggle */}
     <div className="flex items-center rounded-md border">
       <Button
-        variant={displayMode === "list" ? "default" : "ghost"}
-        size="sm"
-        className="rounded-r-none border-r"
-        onClick={() => onSetDisplay("list")}
-        aria-pressed={displayMode === "list"}
-      >
-        List
-      </Button>
-      <Button
         variant={displayMode === "calendar" ? "default" : "ghost"}
         size="sm"
-        className="rounded-l-none"
+        className="rounded-r-none border-r"
         onClick={() => onSetDisplay("calendar")}
         aria-pressed={displayMode === "calendar"}
         data-testid="display-calendar-button"
       >
         Calendar
+      </Button>
+      <Button
+        variant={displayMode === "list" ? "default" : "ghost"}
+        size="sm"
+        className="rounded-l-none"
+        onClick={() => onSetDisplay("list")}
+        aria-pressed={displayMode === "list"}
+        data-testid="display-list-button"
+      >
+        List
       </Button>
     </div>
     <CreateButton label="resources.sessions.action.new" />
@@ -53,16 +55,22 @@ const SessionListActions = ({
 );
 
 /**
- * List view for sessions (scheduled classes).
+ * Sessions list page.
  *
- * Supports two display modes via ?display= URL param:
- * - "list"     (default): tabular list ordered by starts_at ASC.
- * - "calendar": month/week calendar driven by SessionCalendar.
+ * Defaults to the calendar view (?display=calendar). Toggling to "list" falls
+ * back to the DataTable-based view. The resource registration in CRM.tsx is
+ * unchanged — only this component's body changes.
+ *
+ * The calendar view's week/month toggle and prev/next navigation live inside
+ * SessionCalendar (via CalendarToolbar); this component only handles the
+ * calendar-vs-list display switch.
  */
 export const SessionList = () => {
   const now = new Date().toISOString();
   const [searchParams, setSearchParams] = useSearchParams();
-  const displayMode = searchParams.get(DISPLAY_PARAM) ?? "list";
+
+  // Default to "calendar" — the calendar is the primary sessions view.
+  const displayMode = searchParams.get(DISPLAY_PARAM) ?? "calendar";
 
   const setDisplay = (mode: string) => {
     setSearchParams(
@@ -87,9 +95,7 @@ export const SessionList = () => {
       sort={{ field: "starts_at", order: "ASC" }}
       filterDefaultValues={{ "starts_at@gte": now }}
     >
-      {displayMode === "calendar" ? (
-        <SessionCalendar />
-      ) : (
+      {displayMode === "list" ? (
         <DataTable<SessionSummary> rowClick="show">
           <DataTable.Col
             source="starts_at"
@@ -117,6 +123,8 @@ export const SessionList = () => {
             label="resources.sessions.fields.notes"
           />
         </DataTable>
+      ) : (
+        <SessionCalendar />
       )}
     </List>
   );
